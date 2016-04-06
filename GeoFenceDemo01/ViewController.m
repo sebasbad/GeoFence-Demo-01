@@ -44,6 +44,13 @@
         self.statusLabel.text = @"GeoRegions not supported";
     }
 }
+
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+    
+    CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
+    if (kCLAuthorizationStatusAuthorizedWhenInUse == authorizationStatus || kCLAuthorizationStatusAuthorizedAlways == authorizationStatus) {
+        self.activateSwitch.enabled = YES;
+    }
 }
 
 @end

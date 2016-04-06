@@ -23,12 +23,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    
+    // Turn off the User Interface until permission is obtained
+    self.activateSwitch.enabled = NO;
+    self.statusCheckBarButton.enabled = NO;
 }
 
 @end

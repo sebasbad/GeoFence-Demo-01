@@ -11,6 +11,12 @@
 
 @interface ViewController ()
 
+@property (weak, nonatomic) IBOutlet UISwitch *activateSwitch;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *statusCheckBarButton;
+@property (weak, nonatomic) IBOutlet UILabel *statusLabel;
+@property (weak, nonatomic) IBOutlet UILabel *eventLabel;
+@property (weak, nonatomic) IBOutlet MKMapView *mapView;
+
 @end
 
 @implementation ViewController

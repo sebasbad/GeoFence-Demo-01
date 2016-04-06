@@ -116,6 +116,13 @@
                             <constraint firstItem="PGo-To-hkx" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="vFF-UI-h4S"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="activateSwitch" destination="QBF-BG-ge2" id="6ER-cn-HMs"/>
+                        <outlet property="eventLabel" destination="ny7-Nw-aVI" id="ibZ-8O-mIo"/>
+                        <outlet property="mapView" destination="PGo-To-hkx" id="bA1-wd-hfm"/>
+                        <outlet property="statusCheckBarButton" destination="1gq-tJ-d9W" id="RRl-er-70E"/>
+                        <outlet property="statusLabel" destination="bwf-Ap-LFK" id="hB3-gM-yde"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

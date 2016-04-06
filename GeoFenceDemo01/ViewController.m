@@ -6,6 +6,7 @@
 //  Copyright © 2016 Sebastian Badea. All rights reserved.
 //
 
+#import "MapKit/MapKit.h"
 #import "ViewController.h"
 
 @interface ViewController ()

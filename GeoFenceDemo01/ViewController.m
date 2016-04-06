@@ -27,6 +27,23 @@
     // Turn off the User Interface until permission is obtained
     self.activateSwitch.enabled = NO;
     self.statusCheckBarButton.enabled = NO;
+    
+    // Check if the device can do geofences
+    if ([CLLocationManager isMonitoringAvailableForClass:[CLCircularRegion class]]) {
+        
+        CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
+        if (kCLAuthorizationStatusAuthorizedWhenInUse == authorizationStatus || kCLAuthorizationStatusAuthorizedAlways == authorizationStatus) {
+            self.activateSwitch.enabled = YES;
+        }
+        
+        // Ask for notifications permissions if the app is in the background
+        UIUserNotificationType types = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert;
+        UIUserNotificationSettings *mySettings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
+        [[UIApplication sharedApplication] registerUserNotificationSettings:mySettings];
+    } else {
+        self.statusLabel.text = @"GeoRegions not supported";
+    }
+}
 }
 
 @end

@@ -30,6 +30,15 @@
     self.activateSwitch.enabled = NO;
     self.statusCheckBarButton.enabled = NO;
     
+    // Set up the location manager
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    self.locationManager.allowsBackgroundLocationUpdates = YES;
+    self.locationManager.pausesLocationUpdatesAutomatically= YES;
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    // minimum increment of distance in meters, to be notified that location has changed
+    self.locationManager.distanceFilter = 3;
+    
     // Check if the device can do geofences
     if ([CLLocationManager isMonitoringAvailableForClass:[CLCircularRegion class]]) {
         

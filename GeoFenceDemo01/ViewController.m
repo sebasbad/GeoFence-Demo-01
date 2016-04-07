@@ -9,7 +9,7 @@
 #import "MapKit/MapKit.h"
 #import "ViewController.h"
 
-@interface ViewController () <CLLocationManagerDelegate>
+@interface ViewController () <MKMapViewDelegate, CLLocationManagerDelegate>
 
 @property (weak, nonatomic) IBOutlet UISwitch *activateSwitch;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *statusCheckBarButton;

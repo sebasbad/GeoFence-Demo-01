@@ -43,6 +43,13 @@
     // minimum increment of distance in meters, to be notified that location has changed
     self.locationManager.distanceFilter = 3;
     
+    // Zoom the map very close
+    CLLocationCoordinate2D noLocation;
+    // 500 by 500 meters view region
+    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(noLocation, 500, 500);
+    MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];
+    [self.mapView setRegion:adjustedRegion animated:YES];
+    
     // Check if the device can do geofences
     if ([CLLocationManager isMonitoringAvailableForClass:[CLCircularRegion class]]) {
         

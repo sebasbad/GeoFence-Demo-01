@@ -19,6 +19,8 @@
 
 @property (strong, nonatomic) CLLocationManager *locationManager;
 
+@property (nonatomic, assign) BOOL mapIsMoving;
+
 @end
 
 @implementation ViewController
@@ -29,6 +31,8 @@
     // Turn off the User Interface until permission is obtained
     self.activateSwitch.enabled = NO;
     self.statusCheckBarButton.enabled = NO;
+    
+    self.mapIsMoving = NO;
     
     // Set up the location manager
     self.locationManager = [[CLLocationManager alloc] init];
@@ -62,6 +66,14 @@
     if (kCLAuthorizationStatusAuthorizedWhenInUse == authorizationStatus || kCLAuthorizationStatusAuthorizedAlways == authorizationStatus) {
         self.activateSwitch.enabled = YES;
     }
+}
+
+- (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated {
+    self.mapIsMoving = YES;
+}
+
+- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
+    self.mapIsMoving = NO;
 }
 
 @end

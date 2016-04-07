@@ -17,6 +17,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *eventLabel;
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 
+@property (strong, nonatomic) CLLocationManager *locationManager;
+
 @end
 
 @implementation ViewController

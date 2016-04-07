@@ -57,6 +57,10 @@
         if (kCLAuthorizationStatusAuthorizedWhenInUse == authorizationStatus || kCLAuthorizationStatusAuthorizedAlways == authorizationStatus) {
             self.activateSwitch.enabled = YES;
         }
+        else {
+            // If not authorized, try and get it authorized
+            [self.locationManager requestAlwaysAuthorization];
+        }
         
         // Ask for notifications permissions if the app is in the background
         UIUserNotificationType types = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert;

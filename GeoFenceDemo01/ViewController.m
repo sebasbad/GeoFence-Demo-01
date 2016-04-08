@@ -86,5 +86,17 @@
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
     self.mapIsMoving = NO;
 }
+- (IBAction)switchTapped:(id)sender {
+    
+    if (self.activateSwitch.isOn) {
+        self.mapView.showsUserLocation = YES;
+        [self.locationManager startUpdatingLocation];
+        self.statusCheckBarButton.enabled = YES;
+    } else {
+        self.statusCheckBarButton.enabled = NO;
+        [self.locationManager stopUpdatingLocation];
+        self.mapView.showsUserLocation = NO;
+    }
+}
 
 @end

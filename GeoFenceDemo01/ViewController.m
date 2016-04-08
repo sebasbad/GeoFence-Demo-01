@@ -19,6 +19,8 @@
 
 @property (strong, nonatomic) CLLocationManager *locationManager;
 
+@property (strong, nonatomic) MKPointAnnotation *currentAnnotation;
+
 @property (nonatomic, assign) BOOL mapIsMoving;
 
 @end
@@ -49,6 +51,9 @@
     MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(noLocation, 500, 500);
     MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];
     [self.mapView setRegion:adjustedRegion animated:YES];
+    
+    // Create an annotation for the user's location
+    [self addCurrentAnnotation];
     
     // Check if the device can do geofences
     if ([CLLocationManager isMonitoringAvailableForClass:[CLCircularRegion class]]) {
@@ -97,6 +102,12 @@
         [self.locationManager stopUpdatingLocation];
         self.mapView.showsUserLocation = NO;
     }
+}
+
+- (void)addCurrentAnnotation {
+    self.currentAnnotation = [[MKPointAnnotation alloc] init];
+    self.currentAnnotation.coordinate = CLLocationCoordinate2DMake(0.0, 0.0);
+    self.currentAnnotation.title = @"My Location";
 }
 
 @end

@@ -110,4 +110,18 @@
     self.currentAnnotation.title = @"My Location";
 }
 
+- (void)centerMap:(MKPointAnnotation *)centerPoint {
+    [self.mapView setCenterCoordinate:centerPoint.coordinate animated:YES];
+}
+
+#pragma mark - location callbacks
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
+    self.currentAnnotation.coordinate = locations.lastObject.coordinate;
+    
+    if (!self.mapIsMoving) {
+        [self centerMap:self.currentAnnotation];
+    }
+}
+
 @end

@@ -1,6 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" version="1.1"  creator="gpx-poi.com">
-    <wpt lat="40.680638" lon="9.184570"> <time>2016-04-09T18:41:48Z</time> </wpt>
-    <wpt lat="40.9048295" lon="9.2285155"> <time>2016-04-09T18:42:37Z</time> </wpt>
-    <wpt lat="41.129021" lon="9.272461"> <time>2016-04-09T18:43:39Z</time> </wpt>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?> <gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" version="1.1"  creator="gpx-poi.com">
+    <wpt lat="30.022881" lon="31.251469"> <time>2016-04-11T15:58:00Z</time> </wpt>
+    <wpt lat="30.022593" lon="31.251115"> <time>2016-04-11T15:58:30Z</time> </wpt>
+    <wpt lat="30.022268" lon="31.251061"> <time>2016-04-11T15:59:00Z</time> </wpt>
+    <wpt lat="30.021952" lon="31.250782"> <time>2016-04-11T15:59:30Z</time> </wpt>
+    <wpt lat="30.021720" lon="31.250567"> <time>2016-04-11T16:00:00Z</time> </wpt>
+    <wpt lat="30.021413" lon="31.250256"> <time>2016-04-11T16:00:30Z</time> </wpt>
+    <wpt lat="30.021618" lon="31.249816"> <time>2016-04-11T16:01:00Z</time> </wpt>
+    <wpt lat="30.021906" lon="31.249366"> <time>2016-04-11T16:01:30Z</time> </wpt>
+    <wpt lat="30.022129" lon="31.248969"> <time>2016-04-11T16:02:00Z</time> </wpt>
 </gpx>

@@ -21,6 +21,8 @@
 
 @property (strong, nonatomic) MKPointAnnotation *currentAnnotation;
 
+@property (strong, nonatomic) CLCircularRegion *circularGeoRegion;
+
 @property (nonatomic, assign) BOOL mapIsMoving;
 
 @end

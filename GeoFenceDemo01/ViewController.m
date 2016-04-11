@@ -57,6 +57,9 @@
     // Create an annotation for the user's location
     [self addCurrentAnnotation];
     
+    // Set up a georegion
+    //[self setUpGeoregion];
+    
     // Check if the device can do geofences
     if ([CLLocationManager isMonitoringAvailableForClass:[CLCircularRegion class]]) {
         
@@ -93,6 +96,12 @@
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
     self.mapIsMoving = NO;
 }
+
+- (void)setupGeoRegion {
+    // Create the geographic region to be monitored
+    self.circularGeoRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(40.9048295, 9.2285155) radius:3 identifier:@"MyRegionIdentifier"];
+}
+
 - (IBAction)switchTapped:(id)sender {
     
     if (self.activateSwitch.isOn) {

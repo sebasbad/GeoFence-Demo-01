@@ -100,6 +100,14 @@
 - (void)setUpGeoRegion {
     // Create the geographic region to be monitored
     self.circularGeoRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(30.021720, 31.250567) radius:3 identifier:@"MyRegionIdentifier"];
+    
+    // Add an annotation
+    MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
+    point.coordinate = CLLocationCoordinate2DMake(30.021720, 31.250567);
+    point.title = @"Where am I?";
+    point.subtitle = @"I'm here!!!";
+    
+    [self.mapView addAnnotation:point];
 }
 
 - (IBAction)switchTapped:(id)sender {

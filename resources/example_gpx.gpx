@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" version="1.1"  creator="gpx-poi.com">
     <wpt lat="40.680638" lon="9.184570"> <time>2016-04-09T18:41:48Z</time> </wpt>
+    <wpt lat="40.9048295" lon="9.2285155"> <time>2016-04-09T18:42:37Z</time> </wpt>
     <wpt lat="41.129021" lon="9.272461"> <time>2016-04-09T18:43:39Z</time> </wpt>
 </gpx>

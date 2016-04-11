@@ -98,9 +98,11 @@
     if (self.activateSwitch.isOn) {
         self.mapView.showsUserLocation = YES;
         [self.locationManager startUpdatingLocation];
+        [self.locationManager startMonitoringForRegion:self.circularGeoRegion];
         self.statusCheckBarButton.enabled = YES;
     } else {
         self.statusCheckBarButton.enabled = NO;
+        [self.locationManager stopMonitoringForRegion:self.circularGeoRegion];
         [self.locationManager stopUpdatingLocation];
         self.mapView.showsUserLocation = NO;
     }

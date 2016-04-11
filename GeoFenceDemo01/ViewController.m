@@ -99,7 +99,7 @@
 
 - (void)setUpGeoRegion {
     // Create the geographic region to be monitored
-    self.circularGeoRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(40.9048295, 9.2285155) radius:3 identifier:@"MyRegionIdentifier"];
+    self.circularGeoRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(30.021720, 31.250567) radius:3 identifier:@"MyRegionIdentifier"];
 }
 
 - (IBAction)switchTapped:(id)sender {

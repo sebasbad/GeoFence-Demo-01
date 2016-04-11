@@ -137,4 +137,25 @@
     }
 }
 
+- (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region {
+    UILocalNotification *locationNotification = [[UILocalNotification alloc] init];
+    locationNotification.fireDate = nil;
+    locationNotification.repeatInterval = 0;
+    locationNotification.alertTitle = @"Geofence Alert!";
+    locationNotification.alertBody = [NSString stringWithFormat:@"You entered a geofence"];
+    [[UIApplication sharedApplication] scheduleLocalNotification:locationNotification];
+    self.eventLabel.text = @"Entered";
+}
+
+- (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
+    UILocalNotification *locationNotification = [[UILocalNotification alloc] init];
+    locationNotification.fireDate = nil;
+    locationNotification.repeatInterval = 0;
+    locationNotification.alertTitle = @"Geofence Alert!";
+    locationNotification.alertBody = [NSString stringWithFormat:@"You left a geofence"];
+    [[UIApplication sharedApplication] scheduleLocalNotification:locationNotification];
+    self.eventLabel.text = @"Exited";
+
+}
+
 @end

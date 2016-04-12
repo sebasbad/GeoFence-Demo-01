@@ -154,13 +154,13 @@
 - (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region {
     
     if (CLRegionStateUnknown == state) {
-        NSLog(@"Region: unknown");
+        self.statusLabel.text = @"Unknown";
     } else if (CLRegionStateInside == state) {
-        NSLog(@"Region: inside");
+        self.statusLabel.text = @"Inside";
     } else if (CLRegionStateOutside == state) {
-        NSLog(@"Region: outside");
+        self.statusLabel.text = @"Outside";
     } else {
-        NSLog(@"Region: mistery");
+        self.statusLabel.text = @"Mistery";
     }
 }
 

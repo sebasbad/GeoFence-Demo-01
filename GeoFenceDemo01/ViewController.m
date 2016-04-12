@@ -62,8 +62,6 @@
     
     // Check if the device can do geofences
     if ([CLLocationManager isMonitoringAvailableForClass:[CLCircularRegion class]]) {
-        // Regardless of authorization, if hardware can support it, set up a georegion
-        //[self setUpGeoregion];
         
         CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
         if (kCLAuthorizationStatusAuthorizedWhenInUse == authorizationStatus || kCLAuthorizationStatusAuthorizedAlways == authorizationStatus) {

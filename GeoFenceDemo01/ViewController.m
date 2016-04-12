@@ -127,6 +127,9 @@
     }
 }
 
+- (IBAction)statusCheckTapped:(id)sender {
+}
+
 - (void)addCurrentAnnotation {
     self.currentAnnotation = [[MKPointAnnotation alloc] init];
     self.currentAnnotation.coordinate = CLLocationCoordinate2DMake(0.0, 0.0);

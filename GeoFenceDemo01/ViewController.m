@@ -151,6 +151,19 @@
     }
 }
 
+- (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region {
+    
+    if (CLRegionStateUnknown == state) {
+        NSLog(@"Region: unknown");
+    } else if (CLRegionStateInside == state) {
+        NSLog(@"Region: inside");
+    } else if (CLRegionStateOutside == state) {
+        NSLog(@"Region: outside");
+    } else {
+        NSLog(@"Region: mistery");
+    }
+}
+
 - (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region {
     UILocalNotification *locationNotification = [[UILocalNotification alloc] init];
     locationNotification.fireDate = nil;

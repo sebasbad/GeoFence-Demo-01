@@ -128,6 +128,7 @@
 }
 
 - (IBAction)statusCheckTapped:(id)sender {
+    [self.locationManager requestStateForRegion:self.circularGeoRegion];
 }
 
 - (void)addCurrentAnnotation {

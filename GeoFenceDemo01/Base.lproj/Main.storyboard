@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6211" systemVersion="14A298i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1713" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6204"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -15,11 +17,126 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k12-kM-TIF">
+                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                                <items>
+                                    <barButtonItem style="plain" id="Kzz-yt-WWa">
+                                        <view key="customView" contentMode="scaleToFill" id="Bfs-cy-SVR">
+                                            <rect key="frame" x="20" y="5.5" width="126" height="33"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <subviews>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="QBF-BG-ge2">
+                                                    <rect key="frame" x="70" y="1" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="switchTapped:" destination="BYZ-38-t0r" eventType="valueChanged" id="lzK-7p-zZT"/>
+                                                    </connections>
+                                                </switch>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Activate" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ilC-mC-oqm">
+                                                    <rect key="frame" x="0.0" y="6" width="62" height="20.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstItem="ilC-mC-oqm" firstAttribute="leading" secondItem="Bfs-cy-SVR" secondAttribute="leading" id="0ga-8r-XCQ"/>
+                                                <constraint firstItem="QBF-BG-ge2" firstAttribute="centerY" secondItem="Bfs-cy-SVR" secondAttribute="centerY" id="6fE-yM-LTE"/>
+                                                <constraint firstItem="ilC-mC-oqm" firstAttribute="centerY" secondItem="Bfs-cy-SVR" secondAttribute="centerY" id="Jr9-MQ-BJA"/>
+                                                <constraint firstItem="QBF-BG-ge2" firstAttribute="leading" secondItem="ilC-mC-oqm" secondAttribute="trailing" constant="8" symbolic="YES" id="w2g-er-ghD"/>
+                                            </constraints>
+                                        </view>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="ym4-Ao-D41"/>
+                                    <barButtonItem title="Check Status" id="1gq-tJ-d9W">
+                                        <connections>
+                                            <action selector="statusCheckTapped:" destination="BYZ-38-t0r" id="A16-fG-xsN"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" id="RKd-HC-WRA">
+                                        <view key="customView" contentMode="scaleToFill" id="fum-IH-B76">
+                                            <rect key="frame" x="328" y="5.5" width="56" height="33"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Outsite" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bwf-Ap-LFK">
+                                                    <rect key="frame" x="0.0" y="6.5" width="55.5" height="20.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstItem="bwf-Ap-LFK" firstAttribute="centerX" secondItem="fum-IH-B76" secondAttribute="centerX" id="A1S-71-1mg"/>
+                                                <constraint firstItem="bwf-Ap-LFK" firstAttribute="leading" secondItem="fum-IH-B76" secondAttribute="leading" id="DJW-nQ-htp"/>
+                                                <constraint firstItem="bwf-Ap-LFK" firstAttribute="centerY" secondItem="fum-IH-B76" secondAttribute="centerY" id="SAK-9z-eM7"/>
+                                            </constraints>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="A1S-71-1mg"/>
+                                                </mask>
+                                            </variation>
+                                        </view>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="gS6-V4-J4W"/>
+                                    <barButtonItem style="plain" id="Chw-4e-xGV">
+                                        <view key="customView" contentMode="scaleToFill" id="JFB-B1-phe">
+                                            <rect key="frame" x="533" y="5.5" width="47" height="33"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Event" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ny7-Nw-aVI">
+                                                    <rect key="frame" x="4" y="6.5" width="43" height="20.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="ny7-Nw-aVI" secondAttribute="trailing" id="IIe-Hz-EO1"/>
+                                                <constraint firstItem="ny7-Nw-aVI" firstAttribute="centerX" secondItem="JFB-B1-phe" secondAttribute="centerX" id="ISa-ds-Wdy"/>
+                                                <constraint firstItem="ny7-Nw-aVI" firstAttribute="centerY" secondItem="JFB-B1-phe" secondAttribute="centerY" id="x1e-4m-rIm"/>
+                                            </constraints>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="ISa-ds-Wdy"/>
+                                                </mask>
+                                            </variation>
+                                        </view>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="hybrid" translatesAutoresizingMaskIntoConstraints="NO" id="PGo-To-hkx">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="556"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="FsI-Le-1kx"/>
+                                </connections>
+                            </mapView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="k12-kM-TIF" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="BIt-Ff-edZ"/>
+                            <constraint firstItem="PGo-To-hkx" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="QIq-iM-5Fh"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="PGo-To-hkx" secondAttribute="trailing" constant="-20" id="SdU-JA-Fjs"/>
+                            <constraint firstItem="k12-kM-TIF" firstAttribute="top" secondItem="PGo-To-hkx" secondAttribute="bottom" id="aJn-FR-o5j"/>
+                            <constraint firstItem="k12-kM-TIF" firstAttribute="top" secondItem="PGo-To-hkx" secondAttribute="bottom" id="dtA-UL-ez2"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="k12-kM-TIF" secondAttribute="bottom" id="p71-Aq-GQH"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="k12-kM-TIF" secondAttribute="trailing" constant="-20" id="umD-3c-EZn"/>
+                            <constraint firstItem="PGo-To-hkx" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="vFF-UI-h4S"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="activateSwitch" destination="QBF-BG-ge2" id="6ER-cn-HMs"/>
+                        <outlet property="eventLabel" destination="ny7-Nw-aVI" id="ibZ-8O-mIo"/>
+                        <outlet property="mapView" destination="PGo-To-hkx" id="bA1-wd-hfm"/>
+                        <outlet property="statusCheckBarButton" destination="1gq-tJ-d9W" id="RRl-er-70E"/>
+                        <outlet property="statusLabel" destination="bwf-Ap-LFK" id="hB3-gM-yde"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="384" y="474"/>
         </scene>
     </scenes>
 </document>

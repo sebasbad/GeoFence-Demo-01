@@ -1,0 +1,3 @@
+language: objective-c
+xcode_project: GeoFenceDemo01.xcodeproj # path to your xcodeproj folder
+xcode_scheme: GeoFenceDemo01

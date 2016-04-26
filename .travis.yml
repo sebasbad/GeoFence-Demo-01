@@ -1,0 +1,5 @@
+language: objective-c
+osx_image: xcode7.3
+xcode_project: GeoFenceDemo01.xcodeproj # path to your xcodeproj folder
+xcode_scheme: GeoFenceDemo01
+xcode_sdk: iphonesimulator9.3

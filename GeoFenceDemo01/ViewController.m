@@ -25,6 +25,8 @@
 
 @property (nonatomic, assign) BOOL mapIsMoving;
 
+@property (strong, nonatomic) IBOutlet UITapGestureRecognizer *tapGestureRecognizer;
+
 @end
 
 @implementation ViewController

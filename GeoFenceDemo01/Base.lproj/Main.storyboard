@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1713" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -111,10 +111,12 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="556"/>
                                 <connections>
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="FsI-Le-1kx"/>
+                                    <outletCollection property="gestureRecognizers" destination="z61-ra-yli" appends="YES" id="Gwu-OV-AA9"/>
                                 </connections>
                             </mapView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="k12-kM-TIF" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="BIt-Ff-edZ"/>
                             <constraint firstItem="PGo-To-hkx" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="QIq-iM-5Fh"/>
@@ -125,6 +127,9 @@
                             <constraint firstAttribute="trailingMargin" secondItem="k12-kM-TIF" secondAttribute="trailing" constant="-20" id="umD-3c-EZn"/>
                             <constraint firstItem="PGo-To-hkx" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="vFF-UI-h4S"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="z61-ra-yli" appends="YES" id="ULS-m5-AAX"/>
+                        </connections>
                     </view>
                     <connections>
                         <outlet property="activateSwitch" destination="QBF-BG-ge2" id="6ER-cn-HMs"/>
@@ -132,9 +137,11 @@
                         <outlet property="mapView" destination="PGo-To-hkx" id="bA1-wd-hfm"/>
                         <outlet property="statusCheckBarButton" destination="1gq-tJ-d9W" id="RRl-er-70E"/>
                         <outlet property="statusLabel" destination="bwf-Ap-LFK" id="hB3-gM-yde"/>
+                        <outlet property="tapGestureRecognizer" destination="z61-ra-yli" id="Wg8-kr-jYA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="z61-ra-yli"/>
             </objects>
             <point key="canvasLocation" x="384" y="474"/>
         </scene>

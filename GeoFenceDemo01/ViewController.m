@@ -40,12 +40,7 @@
     
     [self configureLocationManager];
     
-    // Zoom the map very close
-    CLLocationCoordinate2D noLocation;
-    // 500 by 500 meters view region
-    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(noLocation, 500, 500);
-    MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];
-    [self.mapView setRegion:adjustedRegion animated:YES];
+    [self zoomInWithWidth:500 andHeight:500];
     
     // Create an annotation for the user's location
     [self addCurrentAnnotation];
@@ -54,6 +49,15 @@
     [self setUpGeoRegion];
     
     [self configureGeoLocationAuthorization];
+}
+
+- (void)zoomInWithWidth:(NSInteger)latitudinalMeters andHeight:(NSInteger)longitudinalMeters {
+    // Zoom the map very close
+    CLLocationCoordinate2D noLocation;
+    // 500 by 500 meters view region
+    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(noLocation, latitudinalMeters, longitudinalMeters);
+    MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];
+    [self.mapView setRegion:adjustedRegion animated:YES];
 }
 
 - (void)configureLocationManager {

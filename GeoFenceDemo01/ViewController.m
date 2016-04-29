@@ -49,6 +49,13 @@
     [self setUpGeoRegion];
     
     [self configureGeoLocationAuthorization];
+    
+    [self configureTapGestureRecognizer];
+}
+
+- (void)configureTapGestureRecognizer {
+    self.tapGestureRecognizer.numberOfTapsRequired = 1;
+    self.tapGestureRecognizer.numberOfTouchesRequired = 1;
 }
 
 - (void)zoomInWithWidth:(NSInteger)latitudinalMeters andHeight:(NSInteger)longitudinalMeters {

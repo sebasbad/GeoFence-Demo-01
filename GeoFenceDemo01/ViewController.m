@@ -34,20 +34,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Turn off the User Interface until permission is obtained
-    self.activateSwitch.enabled = NO;
-    self.statusCheckBarButton.enabled = NO;
+    [self configureUI];
     
     self.mapIsMoving = NO;
     
-    // Set up the location manager
-    self.locationManager = [[CLLocationManager alloc] init];
-    self.locationManager.delegate = self;
-    self.locationManager.allowsBackgroundLocationUpdates = YES;
-    self.locationManager.pausesLocationUpdatesAutomatically= YES;
-    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    // minimum increment of distance in meters, to be notified that location has changed
-    self.locationManager.distanceFilter = 3;
+    [self configureLocationManager];
     
     // Zoom the map very close
     CLLocationCoordinate2D noLocation;
@@ -62,6 +53,27 @@
     // Set up a georegion
     [self setUpGeoRegion];
     
+    [self configureGeoLocationAuthorization];
+}
+
+- (void)configureLocationManager {
+    // Set up the location manager
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    self.locationManager.allowsBackgroundLocationUpdates = YES;
+    self.locationManager.pausesLocationUpdatesAutomatically= YES;
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    // minimum increment of distance in meters, to be notified that location has changed
+    self.locationManager.distanceFilter = 3;
+}
+
+- (void)configureUI {
+    // Turn off the User Interface until permission is obtained
+    self.activateSwitch.enabled = NO;
+    self.statusCheckBarButton.enabled = NO;
+}
+
+- (void)configureGeoLocationAuthorization {
     // Check if the device can do geofences
     if ([CLLocationManager isMonitoringAvailableForClass:[CLCircularRegion class]]) {
         
@@ -81,6 +93,7 @@
     } else {
         self.statusLabel.text = @"GeoRegions not supported";
     }
+
 }
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {

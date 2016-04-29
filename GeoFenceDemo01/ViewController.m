@@ -165,6 +165,19 @@
     [self.mapView setCenterCoordinate:centerPoint.coordinate animated:YES];
 }
 
+#pragma mark - tap gesture recognizer
+
+-(IBAction)foundTap:(UITapGestureRecognizer *)recognizer
+{
+    CGPoint point = [recognizer locationInView:self.mapView];
+    CLLocationCoordinate2D tapPoint = [self.mapView convertPoint:point toCoordinateFromView:self.view];
+    
+    MKPointAnnotation *point1 = [[MKPointAnnotation alloc] init];
+    point1.coordinate = tapPoint;
+    
+    [self.mapView addAnnotation:point1];
+}
+
 #pragma mark - location callbacks
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {

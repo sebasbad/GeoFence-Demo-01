@@ -111,7 +111,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="556"/>
                                 <connections>
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="FsI-Le-1kx"/>
-                                    <outletCollection property="gestureRecognizers" destination="z61-ra-yli" appends="YES" id="Gwu-OV-AA9"/>
+                                    <outletCollection property="gestureRecognizers" destination="bvp-em-3e4" appends="YES" id="nTV-1v-FlV"/>
                                 </connections>
                             </mapView>
                         </subviews>
@@ -127,25 +127,22 @@
                             <constraint firstAttribute="trailingMargin" secondItem="k12-kM-TIF" secondAttribute="trailing" constant="-20" id="umD-3c-EZn"/>
                             <constraint firstItem="PGo-To-hkx" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="vFF-UI-h4S"/>
                         </constraints>
-                        <connections>
-                            <outletCollection property="gestureRecognizers" destination="z61-ra-yli" appends="YES" id="ULS-m5-AAX"/>
-                        </connections>
                     </view>
                     <connections>
                         <outlet property="activateSwitch" destination="QBF-BG-ge2" id="6ER-cn-HMs"/>
                         <outlet property="eventLabel" destination="ny7-Nw-aVI" id="ibZ-8O-mIo"/>
+                        <outlet property="longPressGestureRecognizer" destination="bvp-em-3e4" id="nM3-t6-Jzx"/>
                         <outlet property="mapView" destination="PGo-To-hkx" id="bA1-wd-hfm"/>
                         <outlet property="statusCheckBarButton" destination="1gq-tJ-d9W" id="RRl-er-70E"/>
                         <outlet property="statusLabel" destination="bwf-Ap-LFK" id="hB3-gM-yde"/>
-                        <outlet property="tapGestureRecognizer" destination="z61-ra-yli" id="Wg8-kr-jYA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="z61-ra-yli">
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="bvp-em-3e4">
                     <connections>
-                        <action selector="foundTap:" destination="BYZ-38-t0r" id="ItL-G8-dKC"/>
+                        <action selector="handleLongPress:" destination="BYZ-38-t0r" id="a90-S5-G5a"/>
                     </connections>
-                </tapGestureRecognizer>
+                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="384" y="474"/>
         </scene>

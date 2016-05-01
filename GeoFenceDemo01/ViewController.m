@@ -25,7 +25,8 @@
 
 @property (nonatomic, assign) BOOL mapIsMoving;
 
-@property (strong, nonatomic) IBOutlet UITapGestureRecognizer *tapGestureRecognizer;
+@property (strong, nonatomic) IBOutlet UILongPressGestureRecognizer *longPressGestureRecognizer;
+
 
 @end
 
@@ -49,13 +50,6 @@
     [self setUpGeoRegion];
     
     [self configureGeoLocationAuthorization];
-    
-    [self configureTapGestureRecognizer];
-}
-
-- (void)configureTapGestureRecognizer {
-    self.tapGestureRecognizer.numberOfTapsRequired = 1;
-    self.tapGestureRecognizer.numberOfTouchesRequired = 1;
 }
 
 - (void)zoomInWithWidth:(NSInteger)latitudinalMeters andHeight:(NSInteger)longitudinalMeters {
@@ -165,15 +159,19 @@
     [self.mapView setCenterCoordinate:centerPoint.coordinate animated:YES];
 }
 
-#pragma mark - tap gesture recognizer
+#pragma mark - long press gesture recognizer
 
--(IBAction)foundTap:(UITapGestureRecognizer *)recognizer
+- (IBAction)handleLongPress:(UIGestureRecognizer *)gestureRecognizer
 {
-    CGPoint point = [recognizer locationInView:self.mapView];
-    CLLocationCoordinate2D tapPoint = [self.mapView convertPoint:point toCoordinateFromView:self.view];
+    if (gestureRecognizer.state != UIGestureRecognizerStateBegan)
+        return;
+    
+    CGPoint touchPoint = [gestureRecognizer locationInView:self.mapView];
+    CLLocationCoordinate2D touchMapCoordinate =
+    [self.mapView convertPoint:touchPoint toCoordinateFromView:self.mapView];
     
     MKPointAnnotation *point1 = [[MKPointAnnotation alloc] init];
-    point1.coordinate = tapPoint;
+    point1.coordinate = touchMapCoordinate;
     
     [self.mapView addAnnotation:point1];
 }

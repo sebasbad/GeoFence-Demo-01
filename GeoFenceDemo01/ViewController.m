@@ -180,6 +180,8 @@
     point1.coordinate = touchMapCoordinate;
     
     [self.mapView addAnnotation:point1];
+    
+    [self setUpCircularGeoRegionWithLatitude:touchMapCoordinate.latitude andLongitude:touchMapCoordinate.longitude andRadiusInMeters:3 andIdentifier:@"MyRegionIdentifier" andTitle:@"Where am I?" andSubtitle:@"I'm here!!!"];
 }
 
 #pragma mark - location callbacks

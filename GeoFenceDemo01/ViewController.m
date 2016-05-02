@@ -46,9 +46,6 @@
     // Create an annotation for the user's location
     [self addCurrentAnnotation];
     
-    // Set up a georegion
-    [self setUpGeoRegion];
-    
     [self configureGeoLocationAuthorization];
 }
 
@@ -115,10 +112,6 @@
 
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
     self.mapIsMoving = NO;
-}
-
-- (void)setUpGeoRegion {
-    [self setUpCircularGeoRegionWithLatitude:30.021720 andLongitude:31.250567 andRadiusInMeters:3 andIdentifier:@"MyRegionIdentifier" andTitle:@"Where am I?" andSubtitle:@"I'm here!!!"];
 }
 
 - (void)setUpCircularGeoRegionWithLatitude:(double)latitude andLongitude:(double)longitude andRadiusInMeters:(NSInteger)radius andIdentifier:(NSString *)identifier andTitle:(NSString *)title andSubtitle:(NSString *)subtitle {

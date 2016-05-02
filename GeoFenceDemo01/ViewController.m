@@ -21,7 +21,7 @@
 
 @property (strong, nonatomic) MKPointAnnotation *currentAnnotation;
 
-@property (strong, nonatomic) CLCircularRegion *circularGeoRegion;
+@property (strong, nonatomic) NSMutableArray<CLCircularRegion *> *circularGeoRegions;
 
 @property (nonatomic, assign) BOOL mapIsMoving;
 
@@ -117,7 +117,8 @@
 - (void)setUpCircularGeoRegionWithLatitude:(double)latitude andLongitude:(double)longitude andRadiusInMeters:(NSInteger)radius andIdentifier:(NSString *)identifier andTitle:(NSString *)title andSubtitle:(NSString *)subtitle {
     
     // Create the geographic region to be monitored
-    self.circularGeoRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(latitude, longitude) radius:radius identifier:identifier];
+    CLCircularRegion *circularGeoRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(latitude, longitude) radius:radius identifier:identifier];
+    [self.circularGeoRegions addObject:circularGeoRegion];
     
     // Add an annotation
     MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
@@ -138,18 +139,42 @@
     if (self.activateSwitch.isOn) {
         self.mapView.showsUserLocation = YES;
         [self.locationManager startUpdatingLocation];
-        [self.locationManager startMonitoringForRegion:self.circularGeoRegion];
+        [self locationManager:self.locationManager startMonitoringForRegions:self.circularGeoRegions];
         self.statusCheckBarButton.enabled = YES;
     } else {
         self.statusCheckBarButton.enabled = NO;
-        [self.locationManager stopMonitoringForRegion:self.circularGeoRegion];
+        [self locationManager:self.locationManager stopMonitoringForRegions:self.circularGeoRegions];
         [self.locationManager stopUpdatingLocation];
         self.mapView.showsUserLocation = NO;
     }
 }
 
+- (void)locationManager:(CLLocationManager *)manager stopMonitoringForRegions:(NSArray<CLCircularRegion *> *)circularGeoRegions {
+    
+    for (id item in circularGeoRegions) {
+        CLCircularRegion *circularRegion = (CLCircularRegion *)item;
+        [manager stopMonitoringForRegion:circularRegion];
+    }
+}
+
+- (void)locationManager:(CLLocationManager *)manager startMonitoringForRegions:(NSArray<CLCircularRegion *> *)circularGeoRegions {
+    
+    for (id item in circularGeoRegions) {
+        CLCircularRegion *circularRegion = (CLCircularRegion *)item;
+        [manager startMonitoringForRegion:circularRegion];
+    }
+}
+
+- (void)locationManager:(CLLocationManager *)manager requestStateForRegions:(NSArray<CLCircularRegion *> *)circularGeoRegions {
+    
+    for (id item in circularGeoRegions) {
+        CLCircularRegion *circularRegion = (CLCircularRegion *)item;
+        [manager requestStateForRegion:circularRegion];
+    }
+}
+
 - (IBAction)statusCheckTapped:(id)sender {
-    [self.locationManager requestStateForRegion:self.circularGeoRegion];
+    [self locationManager:self.locationManager requestStateForRegions:self.circularGeoRegions];
 }
 
 - (void)addCurrentAnnotation {

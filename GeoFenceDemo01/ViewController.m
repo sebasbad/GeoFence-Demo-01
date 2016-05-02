@@ -134,7 +134,11 @@
     
     [self.mapView addAnnotation:point];
     
+    // 5. setup circle
+    MKCircle *circle = [MKCircle circleWithCenterCoordinate:point.coordinate radius:radius];
+    [self.mapView addOverlay:circle];
 }
+
 
 - (IBAction)switchTapped:(id)sender {
     
@@ -163,6 +167,15 @@
 
 - (void)centerMap:(MKPointAnnotation *)centerPoint {
     [self.mapView setCenterCoordinate:centerPoint.coordinate animated:YES];
+}
+
+#pragma mark - mapview callbacks
+
+- (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay {
+    MKCircleRenderer *circleRenderer = [[MKCircleRenderer alloc] initWithOverlay:overlay];
+    circleRenderer.strokeColor = [UIColor redColor];
+    circleRenderer.lineWidth = 1.0;
+    return circleRenderer;
 }
 
 #pragma mark - long press gesture recognizer

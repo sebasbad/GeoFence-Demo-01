@@ -246,21 +246,23 @@ NSString *const geoFencesDataKey = @"geoFencesData";
 
 #pragma mark - long press gesture recognizer
 
-- (IBAction)handleLongPress:(UIGestureRecognizer *)gestureRecognizer
-{
-    if (gestureRecognizer.state != UIGestureRecognizerStateBegan)
+- (IBAction)handleLongPress:(UIGestureRecognizer *)gestureRecognizer {
+    
+    if (gestureRecognizer.state != UIGestureRecognizerStateBegan) {
         return;
+    }
     
     CGPoint touchPoint = [gestureRecognizer locationInView:self.mapView];
-    CLLocationCoordinate2D touchMapCoordinate =
-    [self.mapView convertPoint:touchPoint toCoordinateFromView:self.mapView];
+    CLLocationCoordinate2D touchMapCoordinate = [self.mapView convertPoint:touchPoint toCoordinateFromView:self.mapView];
     
-    MKPointAnnotation *point1 = [[MKPointAnnotation alloc] init];
-    point1.coordinate = touchMapCoordinate;
+    MKPointAnnotation *pointAnnotation = [[MKPointAnnotation alloc] init];
+    pointAnnotation.coordinate = touchMapCoordinate;
     
-    [self.mapView addAnnotation:point1];
+    [self.mapView addAnnotation:pointAnnotation];
     
-    [self setUpCircularGeoRegionWithLatitude:touchMapCoordinate.latitude andLongitude:touchMapCoordinate.longitude andRadiusInMeters:3 andIdentifier:@"MyRegionIdentifier" andTitle:@"Where am I?" andSubtitle:@"I'm here!!!"];
+    GeoFence *geoFence = [self setUpCircularGeoRegionWithLatitude:touchMapCoordinate.latitude andLongitude:touchMapCoordinate.longitude andRadiusInMeters:10 andIdentifier:@"MyRegionIdentifier" andTitle:@"Where am I?" andSubtitle:@"I'm here!!!"];
+    
+    [self drawGeoFence:geoFence onMapView:self.mapView];
 }
 
 #pragma mark - location callbacks

@@ -8,6 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
-@interface GeoFence : NSObject
+@interface GeoFence : NSObject <NSCoding>
+
+@property (nonatomic, assign) double centerLatitude;
+@property (nonatomic, assign) double centerLongitude;
+@property (nonatomic, assign) double radius;
+@property (strong, nonatomic) NSString *identifier;
+@property (strong, nonatomic) NSString *title;
+@property (strong, nonatomic) NSString *subtitle;
+
+- (void)encodeWithCoder:(NSCoder *)encoder;
+- (id)initWithCoder:(NSCoder *)decoder;
 
 @end

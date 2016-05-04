@@ -8,6 +8,7 @@
 
 #import "MapKit/MapKit.h"
 #import "ViewController.h"
+#import "GeoFence.h"
 
 @interface ViewController () <MKMapViewDelegate, CLLocationManagerDelegate>
 
@@ -31,6 +32,8 @@
 @end
 
 @implementation ViewController
+
+NSString *const geoFencesDataKey = @"geoFencesData";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -258,6 +261,19 @@
     [[UIApplication sharedApplication] scheduleLocalNotification:locationNotification];
     self.eventLabel.text = @"Exited";
 
+}
+
+#pragma mark - user defaults
+
++ (void)saveGeoFences:(NSArray<GeoFence *> *)geoFences {
+    NSData *geoFencesData = [NSKeyedArchiver archivedDataWithRootObject:geoFences];
+    [[NSUserDefaults standardUserDefaults] setObject:geoFencesData forKey:geoFencesDataKey];
+}
+
++ (NSArray<GeoFence *> *)loadGeoFences {
+    NSData *geoFencesData = [[NSUserDefaults standardUserDefaults] objectForKey:geoFencesDataKey];
+    NSArray<GeoFence *> *geoFencesArray = [NSKeyedUnarchiver unarchiveObjectWithData:geoFencesData];
+    return geoFencesArray;
 }
 
 @end

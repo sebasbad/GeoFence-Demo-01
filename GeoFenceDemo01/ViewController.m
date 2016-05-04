@@ -137,11 +137,25 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     }
 }
 
-- (void)setUpCircularGeoRegionWithLatitude:(double)latitude andLongitude:(double)longitude andRadiusInMeters:(NSInteger)radius andIdentifier:(NSString *)identifier andTitle:(NSString *)title andSubtitle:(NSString *)subtitle {
+- (GeoFence *)setUpCircularGeoRegionWithLatitude:(double)latitude andLongitude:(double)longitude andRadiusInMeters:(NSInteger)radius andIdentifier:(NSString *)identifier andTitle:(NSString *)title andSubtitle:(NSString *)subtitle {
+    
+    NSString *geoFenceIdentifier = [NSString stringWithFormat:@"%lu.%@", self.geoFences.count, identifier];
+    NSString *geoFenceTitle = [NSString stringWithFormat:@"%lu.%@", self.geoFences.count, title];
+    NSString *geoFenceSubtitle = [NSString stringWithFormat:@"%lu.%@", self.geoFences.count, subtitle];
+    
+    // Create geo fence
+    GeoFence *geoFence = [[GeoFence alloc] initWithLatitude:latitude andLongitude:longitude andRadius:radius andIdentifier:geoFenceIdentifier andTitle:geoFenceTitle andSubtitle:geoFenceSubtitle];
     
     // Create the geographic region to be monitored
-    CLCircularRegion *circularGeoRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(latitude, longitude) radius:radius identifier:identifier];
+    CLCircularRegion *circularGeoRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(latitude, longitude) radius:radius identifier:geoFenceIdentifier];
+    
     [self.circularGeoRegions addObject:circularGeoRegion];
+    [self.geoFences addObject:geoFence];
+    
+    [ViewController saveGeoFences:self.geoFences];
+    
+    return geoFence;
+}
 
 - (void)drawGeoFence:(GeoFence *)geoFence onMapView:(MKMapView *)mapView{
     

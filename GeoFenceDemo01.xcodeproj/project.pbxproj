@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4115088A1CDA5ACE00C66B43 /* GeoFence.m in Sources */ = {isa = PBXBuildFile; fileRef = 411508891CDA5ACE00C66B43 /* GeoFence.m */; };
 		4130E8721CB77CF900A64E15 /* example_gpx.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 4130E8711CB77CF900A64E15 /* example_gpx.gpx */; };
 		41AEEE711CC4A716001E377C /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41AEEE6F1CC4A716001E377C /* Fabric.framework */; };
 		41AEEE721CC4A716001E377C /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41AEEE701CC4A716001E377C /* Crashlytics.framework */; };
@@ -20,6 +21,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		411508881CDA5ACE00C66B43 /* GeoFence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeoFence.h; sourceTree = "<group>"; };
+		411508891CDA5ACE00C66B43 /* GeoFence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeoFence.m; sourceTree = "<group>"; };
 		4130E8711CB77CF900A64E15 /* example_gpx.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = example_gpx.gpx; path = resources/example_gpx.gpx; sourceTree = "<group>"; };
 		41AEEE6F1CC4A716001E377C /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		41AEEE701CC4A716001E377C /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
@@ -75,6 +78,8 @@
 			children = (
 				41EAB8331CB43636004EAF39 /* AppDelegate.h */,
 				41EAB8341CB43636004EAF39 /* AppDelegate.m */,
+				411508881CDA5ACE00C66B43 /* GeoFence.h */,
+				411508891CDA5ACE00C66B43 /* GeoFence.m */,
 				41EAB8361CB43636004EAF39 /* ViewController.h */,
 				41EAB8371CB43636004EAF39 /* ViewController.m */,
 				41EAB8391CB43636004EAF39 /* Main.storyboard */,
@@ -184,6 +189,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				41EAB8381CB43636004EAF39 /* ViewController.m in Sources */,
+				4115088A1CDA5ACE00C66B43 /* GeoFence.m in Sources */,
 				41EAB8351CB43636004EAF39 /* AppDelegate.m in Sources */,
 				41EAB8321CB43636004EAF39 /* main.m in Sources */,
 			);

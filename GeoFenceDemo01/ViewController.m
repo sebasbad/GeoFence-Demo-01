@@ -39,6 +39,8 @@ NSString *const geoFencesDataKey = @"geoFencesData";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self loadCircularRegions];
+    
     [self configureUI];
     
     self.mapIsMoving = NO;
@@ -54,6 +56,21 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     
     [self drawGeoFencesOnMap];
 }
+
+- (void)loadCircularRegions {
+    self.geoFences = [[NSMutableArray<GeoFence *> alloc] init];
+    [self.geoFences addObjectsFromArray: [ViewController loadGeoFences]];
+    
+    self.circularGeoRegions = [[NSMutableArray<CLCircularRegion *> alloc] init];
+    
+    for (id item in self.geoFences) {
+        GeoFence *geoFence = (GeoFence *)item;
+        
+        CLLocationCoordinate2D locationCoordinate2D = CLLocationCoordinate2DMake(geoFence.centerLongitude, geoFence.centerLatitude);
+        CLCircularRegion *circularRegion = [[CLCircularRegion alloc] initWithCenter:locationCoordinate2D radius:geoFence.radius identifier:geoFence.identifier];
+        
+        [self.circularGeoRegions addObject:circularRegion];
+    }
 }
 
 - (void)zoomInWithWidth:(NSInteger)latitudinalMeters andHeight:(NSInteger)longitudinalMeters {

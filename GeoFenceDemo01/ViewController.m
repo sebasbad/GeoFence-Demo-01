@@ -23,6 +23,7 @@
 @property (strong, nonatomic) MKPointAnnotation *currentAnnotation;
 
 @property (strong, nonatomic) NSMutableArray<CLCircularRegion *> *circularGeoRegions;
+@property (strong, nonatomic) NSMutableArray<GeoFence *> *geoFences;
 
 @property (nonatomic, assign) BOOL mapIsMoving;
 

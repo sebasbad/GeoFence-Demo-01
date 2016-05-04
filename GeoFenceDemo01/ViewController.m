@@ -51,6 +51,9 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     [self addCurrentAnnotation];
     
     [self configureGeoLocationAuthorization];
+    
+    [self drawGeoFencesOnMap];
+}
 }
 
 - (void)zoomInWithWidth:(NSInteger)latitudinalMeters andHeight:(NSInteger)longitudinalMeters {
@@ -99,7 +102,14 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     } else {
         self.statusLabel.text = @"GeoRegions not supported";
     }
+}
 
+- (void)drawGeoFencesOnMap {
+    for (id item in self.geoFences) {
+        GeoFence *geoFence = (GeoFence *)item;
+        
+        [self drawGeoFence:geoFence onMapView:self.mapView];
+    }
 }
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
@@ -115,18 +125,20 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     // Create the geographic region to be monitored
     CLCircularRegion *circularGeoRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(latitude, longitude) radius:radius identifier:identifier];
     [self.circularGeoRegions addObject:circularGeoRegion];
+
+- (void)drawGeoFence:(GeoFence *)geoFence onMapView:(MKMapView *)mapView{
     
     // Add an annotation
     MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
-    point.coordinate = CLLocationCoordinate2DMake(latitude, longitude);
-    point.title = title;
-    point.subtitle = subtitle;
+    point.coordinate = CLLocationCoordinate2DMake(geoFence.centerLatitude, geoFence.centerLongitude);
+    point.title = geoFence.title;
+    point.subtitle = geoFence.subtitle;
     
-    [self.mapView addAnnotation:point];
+    [mapView addAnnotation:point];
     
     // 5. setup circle
-    MKCircle *circle = [MKCircle circleWithCenterCoordinate:point.coordinate radius:radius];
-    [self.mapView addOverlay:circle];
+    MKCircle *circle = [MKCircle circleWithCenterCoordinate:point.coordinate radius:geoFence.radius];
+    [mapView addOverlay:circle];
 }
 
 

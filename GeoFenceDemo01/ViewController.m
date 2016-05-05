@@ -226,6 +226,46 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     [self.mapView setCenterCoordinate:centerPoint.coordinate animated:YES];
 }
 
+#pragma mark - mapview annotation callback
+
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
+    
+    // If the annotation is the user location, just return nil.
+    if ([annotation isKindOfClass:[MKUserLocation class]])
+        return nil;
+    
+    // Try to dequeue an existing pin view first.
+    MKPinAnnotationView* pinView = (MKPinAnnotationView*)[mapView dequeueReusableAnnotationViewWithIdentifier:@"CustomPinAnnotationView"];
+    
+    if (pinView) {
+        pinView.annotation = annotation;
+        return pinView;
+    }
+    
+    // If no pin view already exists, create a new one.
+    MKPinAnnotationView *customPinView = [[MKPinAnnotationView alloc]
+                                          initWithAnnotation:annotation reuseIdentifier:@"CustomPinAnnotationView"];
+    customPinView.pinColor = MKPinAnnotationColorPurple;
+    customPinView.animatesDrop = YES;
+    customPinView.canShowCallout = YES;
+    
+    // Because this is an iOS app, add the detail disclosure button to display details about the annotation in another view.
+    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+    [rightButton addTarget:nil action:nil forControlEvents:UIControlEventTouchUpInside];
+    customPinView.rightCalloutAccessoryView = rightButton;
+    
+    // Add a custom image to the left side of the callout.
+//    UIImageView *myCustomImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"MyCustomImage.png"]];
+//    customPinView.leftCalloutAccessoryView = myCustomImage;
+    
+    UIImage *trashBinImage = [UIImage imageNamed:@"trash_bin"];
+    UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+    [leftButton setImage:trashBinImage forState:UIControlStateNormal];
+    customPinView.leftCalloutAccessoryView = leftButton;
+    
+    return customPinView;
+}
+
 #pragma mark - mapview callbacks
 
 - (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated {

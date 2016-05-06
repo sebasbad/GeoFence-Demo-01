@@ -64,7 +64,7 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     
     self.circularGeoRegions = [[NSMutableDictionary<NSString *, CLCircularRegion *> alloc] init];
     
-    for (id item in self.geoFences) {
+    for (id item in [self.geoFences allValues]) {
         GeoFence *geoFence = (GeoFence *)item;
         
         CLLocationCoordinate2D locationCoordinate2D = CLLocationCoordinate2DMake(geoFence.centerLongitude, geoFence.centerLatitude);
@@ -127,7 +127,7 @@ NSString *const geoFencesDataKey = @"geoFencesData";
 }
 
 - (void)drawGeoFencesOnMap {
-    for (id item in self.geoFences) {
+    for (id item in [self.geoFences allValues]) {
         GeoFence *geoFence = (GeoFence *)item;
         
         [self drawGeoFence:geoFence onMapView:self.mapView];
@@ -195,7 +195,7 @@ NSString *const geoFencesDataKey = @"geoFencesData";
 
 - (void)locationManager:(CLLocationManager *)manager stopMonitoringForRegions:(NSDictionary<NSString *,CLCircularRegion *> *)circularGeoRegions {
     
-    for (id item in circularGeoRegions) {
+    for (id item in [circularGeoRegions allValues]) {
         CLCircularRegion *circularRegion = (CLCircularRegion *)item;
         [manager stopMonitoringForRegion:circularRegion];
     }
@@ -203,7 +203,7 @@ NSString *const geoFencesDataKey = @"geoFencesData";
 
 - (void)locationManager:(CLLocationManager *)manager startMonitoringForRegions:(NSDictionary<NSString *,CLCircularRegion *> *)circularGeoRegions {
     
-    for (id item in circularGeoRegions) {
+    for (id item in [circularGeoRegions allValues]) {
         CLCircularRegion *circularRegion = (CLCircularRegion *)item;
         [manager startMonitoringForRegion:circularRegion];
     }
@@ -211,7 +211,7 @@ NSString *const geoFencesDataKey = @"geoFencesData";
 
 - (void)locationManager:(CLLocationManager *)manager requestStateForRegions:(NSDictionary<NSString *,CLCircularRegion *> *)circularGeoRegions {
     
-    for (id item in circularGeoRegions) {
+    for (id item in [circularGeoRegions allValues]) {
         CLCircularRegion *circularRegion = (CLCircularRegion *)item;
         [manager requestStateForRegion:circularRegion];
     }

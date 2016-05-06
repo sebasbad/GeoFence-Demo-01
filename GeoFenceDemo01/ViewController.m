@@ -255,18 +255,18 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     customPinView.canShowCallout = YES;
     
     // Because this is an iOS app, add the detail disclosure button to display details about the annotation in another view.
-    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-    [rightButton addTarget:nil action:nil forControlEvents:UIControlEventTouchUpInside];
-    customPinView.rightCalloutAccessoryView = rightButton;
     
     // Add a custom image to the left side of the callout.
 //    UIImageView *myCustomImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"MyCustomImage.png"]];
 //    customPinView.leftCalloutAccessoryView = myCustomImage;
+    UIButton *moreInfoButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+    [moreInfoButton addTarget:nil action:nil forControlEvents:UIControlEventTouchUpInside];
+    customPinView.rightCalloutAccessoryView = moreInfoButton;
     
     UIImage *trashBinImage = [UIImage imageNamed:@"trash_bin"];
-    UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-    [leftButton setImage:trashBinImage forState:UIControlStateNormal];
-    customPinView.leftCalloutAccessoryView = leftButton;
+    UIButton *deleteButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+    [moreInfoButton setImage:trashBinImage forState:UIControlStateNormal];
+    customPinView.leftCalloutAccessoryView = moreInfoButton;
     
     return customPinView;
 }

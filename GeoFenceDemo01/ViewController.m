@@ -8,6 +8,7 @@
 
 #import "MapKit/MapKit.h"
 #import "ViewController.h"
+#import "SystemVersionVerificationHelper.h"
 #import "GeoFence.h"
 
 @interface ViewController () <MKMapViewDelegate, CLLocationManagerDelegate>
@@ -86,9 +87,13 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     // Set up the location manager
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
-    self.locationManager.allowsBackgroundLocationUpdates = YES;
+   
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
+        self.locationManager.allowsBackgroundLocationUpdates = YES;
+    }
     self.locationManager.pausesLocationUpdatesAutomatically= YES;
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    
     // minimum increment of distance in meters, to be notified that location has changed
     self.locationManager.distanceFilter = 3;
 }

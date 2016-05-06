@@ -261,8 +261,9 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     
     UIImage *trashBinImage = [UIImage imageNamed:@"trash_bin"];
     UIButton *deleteButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-    [moreInfoButton setImage:trashBinImage forState:UIControlStateNormal];
-    customPinView.leftCalloutAccessoryView = moreInfoButton;
+    [deleteButton setImage:trashBinImage forState:UIControlStateNormal];
+    [deleteButton addTarget:nil action:nil forControlEvents:UIControlEventTouchUpInside];
+    customPinView.leftCalloutAccessoryView = deleteButton;
     
     return customPinView;
 }

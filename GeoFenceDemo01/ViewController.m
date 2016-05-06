@@ -23,8 +23,8 @@
 
 @property (strong, nonatomic) MKPointAnnotation *currentAnnotation;
 
-@property (strong, nonatomic) NSMutableArray<CLCircularRegion *> *circularGeoRegions;
-@property (strong, nonatomic) NSMutableArray<GeoFence *> *geoFences;
+@property (strong, nonatomic) NSMutableDictionary<NSString *, CLCircularRegion *> *circularGeoRegions;
+@property (strong, nonatomic) NSMutableDictionary<NSString *, GeoFence *> *geoFences;
 
 @property (nonatomic, assign) BOOL mapIsMoving;
 
@@ -59,10 +59,10 @@ NSString *const geoFencesDataKey = @"geoFencesData";
 }
 
 - (void)loadCircularRegions {
-    self.geoFences = [[NSMutableArray<GeoFence *> alloc] init];
-    [self.geoFences addObjectsFromArray: [ViewController loadGeoFences]];
+    self.geoFences = [[NSMutableDictionary<NSString *,GeoFence *> alloc] init];
+    [self.geoFences addEntriesFromDictionary: [ViewController loadGeoFences]];
     
-    self.circularGeoRegions = [[NSMutableArray<CLCircularRegion *> alloc] init];
+    self.circularGeoRegions = [[NSMutableDictionary<NSString *, CLCircularRegion *> alloc] init];
     
     for (id item in self.geoFences) {
         GeoFence *geoFence = (GeoFence *)item;
@@ -70,7 +70,7 @@ NSString *const geoFencesDataKey = @"geoFencesData";
         CLLocationCoordinate2D locationCoordinate2D = CLLocationCoordinate2DMake(geoFence.centerLongitude, geoFence.centerLatitude);
         CLCircularRegion *circularRegion = [[CLCircularRegion alloc] initWithCenter:locationCoordinate2D radius:geoFence.radius identifier:geoFence.identifier];
         
-        [self.circularGeoRegions addObject:circularRegion];
+        [self.circularGeoRegions setObject:circularRegion forKey:geoFence.identifier];
     }
 }
 
@@ -154,8 +154,8 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     // Create the geographic region to be monitored
     CLCircularRegion *circularGeoRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(latitude, longitude) radius:radius identifier:geoFenceIdentifier];
     
-    [self.circularGeoRegions addObject:circularGeoRegion];
-    [self.geoFences addObject:geoFence];
+    [self.circularGeoRegions setObject:circularGeoRegion forKey:geoFence.identifier];
+    [self.geoFences setObject:geoFence forKey:geoFence.identifier];
     
     [ViewController saveGeoFences:self.geoFences];
     
@@ -193,7 +193,7 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     }
 }
 
-- (void)locationManager:(CLLocationManager *)manager stopMonitoringForRegions:(NSArray<CLCircularRegion *> *)circularGeoRegions {
+- (void)locationManager:(CLLocationManager *)manager stopMonitoringForRegions:(NSDictionary<NSString *,CLCircularRegion *> *)circularGeoRegions {
     
     for (id item in circularGeoRegions) {
         CLCircularRegion *circularRegion = (CLCircularRegion *)item;
@@ -201,7 +201,7 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     }
 }
 
-- (void)locationManager:(CLLocationManager *)manager startMonitoringForRegions:(NSArray<CLCircularRegion *> *)circularGeoRegions {
+- (void)locationManager:(CLLocationManager *)manager startMonitoringForRegions:(NSDictionary<NSString *,CLCircularRegion *> *)circularGeoRegions {
     
     for (id item in circularGeoRegions) {
         CLCircularRegion *circularRegion = (CLCircularRegion *)item;
@@ -209,7 +209,7 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     }
 }
 
-- (void)locationManager:(CLLocationManager *)manager requestStateForRegions:(NSArray<CLCircularRegion *> *)circularGeoRegions {
+- (void)locationManager:(CLLocationManager *)manager requestStateForRegions:(NSDictionary<NSString *,CLCircularRegion *> *)circularGeoRegions {
     
     for (id item in circularGeoRegions) {
         CLCircularRegion *circularRegion = (CLCircularRegion *)item;
@@ -356,15 +356,15 @@ NSString *const geoFencesDataKey = @"geoFencesData";
 
 #pragma mark - user defaults
 
-+ (void)saveGeoFences:(NSArray<GeoFence *> *)geoFences {
++ (void)saveGeoFences:(NSDictionary<NSString *, GeoFence *> *)geoFences {
     NSData *geoFencesData = [NSKeyedArchiver archivedDataWithRootObject:geoFences];
     [[NSUserDefaults standardUserDefaults] setObject:geoFencesData forKey:geoFencesDataKey];
 }
 
-+ (NSArray<GeoFence *> *)loadGeoFences {
++ (NSDictionary<NSString *, GeoFence *> *)loadGeoFences {
     NSData *geoFencesData = [[NSUserDefaults standardUserDefaults] objectForKey:geoFencesDataKey];
-    NSArray<GeoFence *> *geoFencesArray = [NSKeyedUnarchiver unarchiveObjectWithData:geoFencesData];
-    return geoFencesArray;
+    NSDictionary<NSString *,GeoFence *> *geoFencesDictionary = [NSKeyedUnarchiver unarchiveObjectWithData:geoFencesData];
+    return geoFencesDictionary;
 }
 
 @end

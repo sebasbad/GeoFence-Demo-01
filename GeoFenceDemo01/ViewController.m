@@ -306,6 +306,19 @@ NSString *const geoFencesDataKey = @"geoFencesData";
             }
         }
         
+        // Remove map pin annotation
+        
+        for (id<MKAnnotation> item in [mapView annotations]) {
+            id<MKAnnotation> annotation = (id<MKAnnotation>)item;
+            
+            NSLog(@"annotation.coordinate.latitude: %f, annotation.coordinate.longitude: %f", annotation.coordinate.latitude, annotation.coordinate.longitude);
+            
+            if (annotationLatitude == annotation.coordinate.latitude && annotationLongitude == annotation.coordinate.longitude) {
+                [mapView removeAnnotation:annotation];
+                break;
+            }
+        }
+        
         for (id item in [self.geoFences allKeys]) {
             NSString *geoFenceKey = (NSString *)item;
             GeoFence *geoFence = (GeoFence *)self.geoFences[geoFenceKey];

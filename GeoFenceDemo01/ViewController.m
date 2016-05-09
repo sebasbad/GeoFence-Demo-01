@@ -177,7 +177,6 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     [mapView addOverlay:circle];
 }
 
-
 - (IBAction)switchTapped:(id)sender {
     
     if (self.activateSwitch.isOn) {
@@ -255,15 +254,17 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     customPinView.canShowCallout = YES;
     
     // Because this is an iOS app, add the detail disclosure button to display details about the annotation in another view.
-    UIButton *moreInfoButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-    [moreInfoButton addTarget:nil action:nil forControlEvents:UIControlEventTouchUpInside];
-    customPinView.rightCalloutAccessoryView = moreInfoButton;
-    
     UIImage *trashBinImage = [UIImage imageNamed:@"trash_bin"];
     UIButton *deleteButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
     [deleteButton setImage:trashBinImage forState:UIControlStateNormal];
     [deleteButton addTarget:nil action:nil forControlEvents:UIControlEventTouchUpInside];
+    deleteButton.tag = 1;
     customPinView.leftCalloutAccessoryView = deleteButton;
+    
+    UIButton *moreInfoButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+    [moreInfoButton addTarget:nil action:nil forControlEvents:UIControlEventTouchUpInside];
+    moreInfoButton.tag = 2;
+    customPinView.rightCalloutAccessoryView = moreInfoButton;
     
     return customPinView;
 }

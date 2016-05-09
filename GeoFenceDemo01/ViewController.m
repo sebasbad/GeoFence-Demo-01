@@ -270,6 +270,56 @@ NSString *const geoFencesDataKey = @"geoFencesData";
 
 #pragma mark - mapview callbacks
 
+- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
+    
+    double annotationLatitude = view.annotation.coordinate.latitude;
+    double annotationLongitude = view.annotation.coordinate.longitude;
+    
+    NSLog(@"annotationLatitude: %f, annotationLongitude: %f", annotationLatitude, annotationLongitude);
+    NSLog(@"%@",view.annotation.title);
+    NSLog(@"%@",view.annotation.subtitle);
+    NSLog(@"%@", control);
+    
+    if (1 == control.tag) {
+        for (id item in [self.circularGeoRegions allKeys]) {
+            NSString *circularRegionKey = (NSString *)item;
+            CLCircularRegion *circularRegion = (CLCircularRegion *)self.circularGeoRegions[circularRegionKey];
+            
+            NSLog(@"circularRegion.center.latitude: %f, circularRegion.center.longitude: %f", circularRegion.center.latitude, circularRegion.center.longitude);
+            
+            if (annotationLatitude == circularRegion.center.latitude && annotationLongitude == circularRegion.center.longitude) {
+                [self.locationManager stopMonitoringForRegion:circularRegion];
+                [self.circularGeoRegions removeObjectForKey:circularRegionKey];
+                break;
+            }
+        }
+        
+        for (id<MKOverlay> item in [mapView overlays]) {
+            id<MKOverlay> overlay = (id<MKOverlay>)item;
+            
+            NSLog(@"overlay.coordinate.latitude: %f, overlay.coordinate.longitude: %f", overlay.coordinate.latitude, overlay.coordinate.longitude);
+            
+            if (annotationLatitude == overlay.coordinate.latitude && annotationLongitude == overlay.coordinate.longitude) {
+                [mapView removeOverlay:overlay];
+                break;
+            }
+        }
+        
+        for (id item in [self.geoFences allKeys]) {
+            NSString *geoFenceKey = (NSString *)item;
+            GeoFence *geoFence = (GeoFence *)self.geoFences[geoFenceKey];
+            
+            NSLog(@"geoFence.centerLatitude: %f, geoFence.centerLongitude: %f", geoFence.centerLatitude, geoFence.centerLongitude);
+            
+            if (annotationLatitude == geoFence.centerLatitude && annotationLongitude == geoFence.centerLongitude) {
+                //[self removeGeoFence:geoFence onMapView:mapView];
+                [self.geoFences removeObjectForKey:geoFenceKey];
+                break;
+            }
+        }
+    }
+}
+
 - (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated {
     self.mapIsMoving = YES;
 }

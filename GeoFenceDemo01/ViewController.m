@@ -282,6 +282,9 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     NSLog(@"%@", control);
     
     if (1 == control.tag) {
+        
+        // Remove circular regions
+        
         for (id item in [self.circularGeoRegions allKeys]) {
             NSString *circularRegionKey = (NSString *)item;
             CLCircularRegion *circularRegion = (CLCircularRegion *)self.circularGeoRegions[circularRegionKey];
@@ -294,6 +297,8 @@ NSString *const geoFencesDataKey = @"geoFencesData";
                 break;
             }
         }
+        
+        // Remove map circular overlay
         
         for (id<MKOverlay> item in [mapView overlays]) {
             id<MKOverlay> overlay = (id<MKOverlay>)item;
@@ -318,6 +323,8 @@ NSString *const geoFencesDataKey = @"geoFencesData";
                 break;
             }
         }
+        
+        // Remove geo fence
         
         for (id item in [self.geoFences allKeys]) {
             NSString *geoFenceKey = (NSString *)item;

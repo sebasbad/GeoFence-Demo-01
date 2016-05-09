@@ -67,7 +67,7 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     for (id item in [self.geoFences allValues]) {
         GeoFence *geoFence = (GeoFence *)item;
         
-        CLLocationCoordinate2D locationCoordinate2D = CLLocationCoordinate2DMake(geoFence.centerLongitude, geoFence.centerLatitude);
+        CLLocationCoordinate2D locationCoordinate2D = CLLocationCoordinate2DMake(geoFence.centerLatitude, geoFence.centerLongitude);
         CLCircularRegion *circularRegion = [[CLCircularRegion alloc] initWithCenter:locationCoordinate2D radius:geoFence.radius identifier:geoFence.identifier];
         
         [self.circularGeoRegions setObject:circularRegion forKey:geoFence.identifier];

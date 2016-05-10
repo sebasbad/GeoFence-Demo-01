@@ -405,7 +405,11 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     UILocalNotification *locationNotification = [[UILocalNotification alloc] init];
     locationNotification.fireDate = nil;
     locationNotification.repeatInterval = 0;
-    locationNotification.alertTitle = @"Geofence Alert!";
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.2")) {
+        locationNotification.alertTitle = @"Geofence Alert!";
+    }
+    
     locationNotification.alertBody = [NSString stringWithFormat:@"You entered a geofence"];
     [[UIApplication sharedApplication] scheduleLocalNotification:locationNotification];
     self.eventLabel.text = @"Entered";
@@ -415,7 +419,11 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     UILocalNotification *locationNotification = [[UILocalNotification alloc] init];
     locationNotification.fireDate = nil;
     locationNotification.repeatInterval = 0;
-    locationNotification.alertTitle = @"Geofence Alert!";
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.2")) {
+        locationNotification.alertTitle = @"Geofence Alert!";
+    }
+    
     locationNotification.alertBody = [NSString stringWithFormat:@"You left a geofence"];
     [[UIApplication sharedApplication] scheduleLocalNotification:locationNotification];
     self.eventLabel.text = @"Exited";

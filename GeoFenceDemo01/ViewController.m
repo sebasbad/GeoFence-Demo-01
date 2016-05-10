@@ -373,7 +373,7 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     
     [self.mapView addAnnotation:pointAnnotation];
     
-    GeoFence *geoFence = [self setUpCircularGeoRegionWithLatitude:touchMapCoordinate.latitude andLongitude:touchMapCoordinate.longitude andRadiusInMeters:10 andIdentifier:@"MyRegionIdentifier" andTitle:@"Where am I?" andSubtitle:@"I'm here!!!"];
+    GeoFence *geoFence = [self setUpCircularGeoRegionWithLatitude:touchMapCoordinate.latitude andLongitude:touchMapCoordinate.longitude andRadiusInMeters:3 andIdentifier:@"MyRegionIdentifier" andTitle:@"Where am I?" andSubtitle:@"I'm here!!!"];
     
     [self drawGeoFence:geoFence onMapView:self.mapView];
 }

@@ -402,6 +402,14 @@ NSString *const geoFencesDataKey = @"geoFencesData";
 }
 
 - (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region {
+    
+    if ([region isKindOfClass:[CLCircularRegion class]]) {
+        
+        CLCircularRegion *circularRegion = (CLCircularRegion *)region;
+        
+        NSLog(@"Did enter circularRegion.center.latitude: %f, circularRegion.center.longitude: %f", circularRegion.center.latitude, circularRegion.center.longitude);
+    }
+    
     UILocalNotification *locationNotification = [[UILocalNotification alloc] init];
     locationNotification.fireDate = nil;
     locationNotification.repeatInterval = 0;
@@ -416,6 +424,14 @@ NSString *const geoFencesDataKey = @"geoFencesData";
 }
 
 - (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
+    
+    if ([region isKindOfClass:[CLCircularRegion class]]) {
+        
+        CLCircularRegion *circularRegion = (CLCircularRegion *)region;
+        
+        NSLog(@"Did exit circularRegion.center.latitude: %f, circularRegion.center.longitude: %f", circularRegion.center.latitude, circularRegion.center.longitude);
+    }
+    
     UILocalNotification *locationNotification = [[UILocalNotification alloc] init];
     locationNotification.fireDate = nil;
     locationNotification.repeatInterval = 0;

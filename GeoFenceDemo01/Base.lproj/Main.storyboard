@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1713" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -111,10 +111,12 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="556"/>
                                 <connections>
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="FsI-Le-1kx"/>
+                                    <outletCollection property="gestureRecognizers" destination="bvp-em-3e4" appends="YES" id="nTV-1v-FlV"/>
                                 </connections>
                             </mapView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="k12-kM-TIF" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="BIt-Ff-edZ"/>
                             <constraint firstItem="PGo-To-hkx" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="QIq-iM-5Fh"/>
@@ -129,12 +131,18 @@
                     <connections>
                         <outlet property="activateSwitch" destination="QBF-BG-ge2" id="6ER-cn-HMs"/>
                         <outlet property="eventLabel" destination="ny7-Nw-aVI" id="ibZ-8O-mIo"/>
+                        <outlet property="longPressGestureRecognizer" destination="bvp-em-3e4" id="nM3-t6-Jzx"/>
                         <outlet property="mapView" destination="PGo-To-hkx" id="bA1-wd-hfm"/>
                         <outlet property="statusCheckBarButton" destination="1gq-tJ-d9W" id="RRl-er-70E"/>
                         <outlet property="statusLabel" destination="bwf-Ap-LFK" id="hB3-gM-yde"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="bvp-em-3e4">
+                    <connections>
+                        <action selector="handleLongPress:" destination="BYZ-38-t0r" id="a90-S5-G5a"/>
+                    </connections>
+                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="384" y="474"/>
         </scene>

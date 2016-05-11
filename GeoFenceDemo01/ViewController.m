@@ -8,6 +8,8 @@
 
 #import "MapKit/MapKit.h"
 #import "ViewController.h"
+#import "SystemVersionVerificationHelper.h"
+#import "GeoFence.h"
 
 @interface ViewController () <MKMapViewDelegate, CLLocationManagerDelegate>
 
@@ -21,45 +23,88 @@
 
 @property (strong, nonatomic) MKPointAnnotation *currentAnnotation;
 
-@property (strong, nonatomic) CLCircularRegion *circularGeoRegion;
+@property (strong, nonatomic) NSMutableDictionary<NSString *, CLCircularRegion *> *circularGeoRegions;
+@property (strong, nonatomic) NSMutableDictionary<NSString *, GeoFence *> *geoFences;
 
 @property (nonatomic, assign) BOOL mapIsMoving;
+
+@property (strong, nonatomic) IBOutlet UILongPressGestureRecognizer *longPressGestureRecognizer;
+
 
 @end
 
 @implementation ViewController
 
+NSString *const geoFencesDataKey = @"geoFencesData";
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Turn off the User Interface until permission is obtained
-    self.activateSwitch.enabled = NO;
-    self.statusCheckBarButton.enabled = NO;
+    [self loadCircularRegions];
+    
+    [self configureUI];
     
     self.mapIsMoving = NO;
     
-    // Set up the location manager
-    self.locationManager = [[CLLocationManager alloc] init];
-    self.locationManager.delegate = self;
-    self.locationManager.allowsBackgroundLocationUpdates = YES;
-    self.locationManager.pausesLocationUpdatesAutomatically= YES;
-    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    // minimum increment of distance in meters, to be notified that location has changed
-    self.locationManager.distanceFilter = 3;
+    [self configureLocationManager];
     
-    // Zoom the map very close
-    CLLocationCoordinate2D noLocation;
-    // 500 by 500 meters view region
-    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(noLocation, 500, 500);
-    MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];
-    [self.mapView setRegion:adjustedRegion animated:YES];
+    [self zoomInWithWidth:500 andHeight:500];
     
     // Create an annotation for the user's location
     [self addCurrentAnnotation];
     
-    // Set up a georegion
-    [self setUpGeoRegion];
+    [self configureGeoLocationAuthorization];
     
+    [self drawGeoFencesOnMap];
+}
+
+- (void)loadCircularRegions {
+    self.geoFences = [[NSMutableDictionary<NSString *,GeoFence *> alloc] init];
+    [self.geoFences addEntriesFromDictionary: [ViewController loadGeoFences]];
+    
+    self.circularGeoRegions = [[NSMutableDictionary<NSString *, CLCircularRegion *> alloc] init];
+    
+    for (id item in [self.geoFences allValues]) {
+        GeoFence *geoFence = (GeoFence *)item;
+        
+        CLLocationCoordinate2D locationCoordinate2D = CLLocationCoordinate2DMake(geoFence.centerLatitude, geoFence.centerLongitude);
+        CLCircularRegion *circularRegion = [[CLCircularRegion alloc] initWithCenter:locationCoordinate2D radius:geoFence.radius identifier:geoFence.identifier];
+        
+        [self.circularGeoRegions setObject:circularRegion forKey:geoFence.identifier];
+    }
+}
+
+- (void)zoomInWithWidth:(NSInteger)latitudinalMeters andHeight:(NSInteger)longitudinalMeters {
+    // Zoom the map very close
+    CLLocationCoordinate2D noLocation;
+    // 500 by 500 meters view region
+    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(noLocation, latitudinalMeters, longitudinalMeters);
+    MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];
+    [self.mapView setRegion:adjustedRegion animated:YES];
+}
+
+- (void)configureLocationManager {
+    // Set up the location manager
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+   
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
+        self.locationManager.allowsBackgroundLocationUpdates = YES;
+    }
+    self.locationManager.pausesLocationUpdatesAutomatically= YES;
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    
+    // minimum increment of distance in meters, to be notified that location has changed
+    self.locationManager.distanceFilter = 3;
+}
+
+- (void)configureUI {
+    // Turn off the User Interface until permission is obtained
+    self.activateSwitch.enabled = NO;
+    self.statusCheckBarButton.enabled = NO;
+}
+
+- (void)configureGeoLocationAuthorization {
     // Check if the device can do geofences
     if ([CLLocationManager isMonitoringAvailableForClass:[CLCircularRegion class]]) {
         
@@ -81,11 +126,302 @@
     }
 }
 
+- (void)drawGeoFencesOnMap {
+    for (id item in [self.geoFences allValues]) {
+        GeoFence *geoFence = (GeoFence *)item;
+        
+        [self drawGeoFence:geoFence onMapView:self.mapView];
+    }
+}
+
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
     
     CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
     if (kCLAuthorizationStatusAuthorizedWhenInUse == authorizationStatus || kCLAuthorizationStatusAuthorizedAlways == authorizationStatus) {
         self.activateSwitch.enabled = YES;
+    }
+}
+
+- (GeoFence *)setUpCircularGeoRegionWithLatitude:(double)latitude andLongitude:(double)longitude andRadiusInMeters:(NSInteger)radius andIdentifier:(NSString *)identifier andTitle:(NSString *)title andSubtitle:(NSString *)subtitle {
+    
+    NSString *geoFenceIdentifier = [NSString stringWithFormat:@"%lu.%@", self.geoFences.count, identifier];
+    NSString *geoFenceTitle = [NSString stringWithFormat:@"%lu.%@", self.geoFences.count, title];
+    NSString *geoFenceSubtitle = [NSString stringWithFormat:@"%lu.%@", self.geoFences.count, subtitle];
+    
+    // Create geo fence
+    GeoFence *geoFence = [[GeoFence alloc] initWithLatitude:latitude andLongitude:longitude andRadius:radius andIdentifier:geoFenceIdentifier andTitle:geoFenceTitle andSubtitle:geoFenceSubtitle];
+    
+    // Create the geographic region to be monitored
+    CLCircularRegion *circularGeoRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(latitude, longitude) radius:radius identifier:geoFenceIdentifier];
+    
+    [self.circularGeoRegions setObject:circularGeoRegion forKey:geoFence.identifier];
+    [self.geoFences setObject:geoFence forKey:geoFence.identifier];
+    
+    [ViewController saveGeoFences:self.geoFences];
+    
+    return geoFence;
+}
+
+- (void)drawGeoFence:(GeoFence *)geoFence onMapView:(MKMapView *)mapView{
+    
+    // Add an annotation
+    MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
+    point.coordinate = CLLocationCoordinate2DMake(geoFence.centerLatitude, geoFence.centerLongitude);
+    point.title = geoFence.title;
+    point.subtitle = geoFence.subtitle;
+    
+    [mapView addAnnotation:point];
+    
+    // 5. setup circle
+    MKCircle *circle = [MKCircle circleWithCenterCoordinate:point.coordinate radius:geoFence.radius];
+    [mapView addOverlay:circle];
+}
+
+- (IBAction)switchTapped:(id)sender {
+    
+    if (self.activateSwitch.isOn) {
+        self.mapView.showsUserLocation = YES;
+        [self.locationManager startUpdatingLocation];
+        [self locationManager:self.locationManager startMonitoringForRegions:self.circularGeoRegions];
+        self.statusCheckBarButton.enabled = YES;
+    } else {
+        self.statusCheckBarButton.enabled = NO;
+        [self locationManager:self.locationManager stopMonitoringForRegions:self.circularGeoRegions];
+        [self.locationManager stopUpdatingLocation];
+        self.mapView.showsUserLocation = NO;
+    }
+}
+
+- (void)locationManager:(CLLocationManager *)manager stopMonitoringForRegions:(NSDictionary<NSString *,CLCircularRegion *> *)circularGeoRegions {
+    
+    for (id item in [circularGeoRegions allValues]) {
+        CLCircularRegion *circularRegion = (CLCircularRegion *)item;
+        [manager stopMonitoringForRegion:circularRegion];
+    }
+}
+
+- (void)locationManager:(CLLocationManager *)manager startMonitoringForRegions:(NSDictionary<NSString *,CLCircularRegion *> *)circularGeoRegions {
+    
+    for (id item in [circularGeoRegions allValues]) {
+        CLCircularRegion *circularRegion = (CLCircularRegion *)item;
+        [manager startMonitoringForRegion:circularRegion];
+    }
+}
+
+- (void)locationManager:(CLLocationManager *)manager requestStateForRegions:(NSDictionary<NSString *,CLCircularRegion *> *)circularGeoRegions {
+    
+    for (id item in [circularGeoRegions allValues]) {
+        CLCircularRegion *circularRegion = (CLCircularRegion *)item;
+        [manager requestStateForRegion:circularRegion];
+    }
+}
+
+- (IBAction)statusCheckTapped:(id)sender {
+    [self locationManager:self.locationManager requestStateForRegions:self.circularGeoRegions];
+}
+
+- (void)addCurrentAnnotation {
+    self.currentAnnotation = [[MKPointAnnotation alloc] init];
+    self.currentAnnotation.coordinate = CLLocationCoordinate2DMake(0.0, 0.0);
+    self.currentAnnotation.title = @"My Location";
+}
+
+- (void)centerMap:(MKPointAnnotation *)centerPoint {
+    [self.mapView setCenterCoordinate:centerPoint.coordinate animated:YES];
+}
+
+# pragma mark - geo fence creation and management methods
+
+- (void)createCustomGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude {
+    
+    NSString *alertTitle = @"New Geo Fence";
+    NSString *alertMessage = @"Fill in the Geo Fence data";
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:alertTitle message:alertMessage preferredStyle:UIAlertControllerStyleAlert];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = NSLocalizedString(@"IdentifierPlaceholder", @"Identifier");
+        textField.text = @"MyRegionIdentifier";
+    }];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = NSLocalizedString(@"TitlePlaceholder", @"Title");
+        textField.text = @"Where am I?";
+    }];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = NSLocalizedString(@"SubtitlePlaceholder", @"Subtitle");
+        textField.text = @"I'm here!!!";
+    }];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = NSLocalizedString(@"RadiusPlaceholder", @"Radius in meters");
+        textField.keyboardType = UIKeyboardTypeNumberPad;
+        textField.text = @"3";
+    }];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel action") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+        NSLog(@"Cancel action");
+    }];
+    
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK action") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        
+        UITextField *identifierTextField = alertController.textFields.firstObject;
+        UITextField *titleTextField = alertController.textFields[1];
+        UITextField *subtitleTextField = alertController.textFields[2];
+        UITextField *radiusTextField = alertController.textFields.lastObject;
+        
+        NSString *identifier = nil == identifierTextField.text ? @"MyRegionIdentifier" : identifierTextField.text;
+        NSString *title = nil == titleTextField.text ? @"MyRegionIdentifier" : titleTextField.text;
+        NSString *subtitle = nil == subtitleTextField.text ? @"I'm here!!!" : subtitleTextField.text;
+        
+        NSNumber *radiusNumber = [[[NSNumberFormatter alloc] init] numberFromString:radiusTextField.text];
+        NSInteger radius = [radiusNumber integerValue];
+        radius = radius <= 0 ? 3 : radius;
+        
+        GeoFence *geoFence = [self setUpCircularGeoRegionWithLatitude:latitude andLongitude:longitude andRadiusInMeters:radius andIdentifier:identifier andTitle:title andSubtitle:subtitle];
+        
+        [self drawGeoFence:geoFence onMapView:self.mapView];
+        
+    }];
+    
+    [alertController addAction:cancelAction];
+    [alertController addAction:okAction];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
+# pragma mark - geo fence removal methods
+
+- (void)deleteGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude fromMapView:(MKMapView *)mapView {
+    
+    // Delete "first" geo fence with the given center latitude and longitude
+    
+    for (id item in [self.geoFences allKeys]) {
+        NSString *geoFenceKey = (NSString *)item;
+        GeoFence *geoFence = (GeoFence *)self.geoFences[geoFenceKey];
+        
+        if (latitude == geoFence.centerLatitude && longitude == geoFence.centerLongitude) {
+        
+            [self deleteRegionWithLatitude:latitude andLongitude:longitude];
+            [ViewController mapView:mapView removeOverlayWithLatitude:latitude andLongitude:longitude];
+            [ViewController mapView:mapView removeAnnotationWithLatitude:latitude andLongitude:longitude];
+            
+            NSLog(@"Deleting geo fence with center latitude: %f, longitude: %f", geoFence.centerLatitude, geoFence.centerLongitude);
+            
+            [self.geoFences removeObjectForKey:geoFenceKey];
+            break;
+        }
+    }
+}
+
+- (void)deleteRegionWithLatitude:(double)latitude andLongitude:(double)longitude {
+    
+    // Delete "first" circular region with the given center latitude and longitude
+    
+    for (id item in [self.circularGeoRegions allKeys]) {
+        NSString *circularRegionKey = (NSString *)item;
+        CLCircularRegion *circularRegion = (CLCircularRegion *)self.circularGeoRegions[circularRegionKey];
+        
+        if (latitude == circularRegion.center.latitude && longitude == circularRegion.center.longitude) {
+            
+            NSLog(@"Deleting circular region with key: %@ center.latitude: %f, center.longitude: %f", circularRegionKey, circularRegion.center.latitude, circularRegion.center.longitude);
+            
+            [self.locationManager stopMonitoringForRegion:circularRegion];
+            [self.circularGeoRegions removeObjectForKey:circularRegionKey];
+            break;
+        }
+    }
+}
+
++ (void)mapView:(MKMapView *)mapView removeOverlayWithLatitude:(double)latitude andLongitude:(double)longitude {
+    
+    // Remove first map overlay with the given center latitude and longitude
+    
+    for (id<MKOverlay> item in [mapView overlays]) {
+        id<MKOverlay> overlay = (id<MKOverlay>)item;
+        
+        if (latitude == overlay.coordinate.latitude && longitude == overlay.coordinate.longitude) {
+            
+            NSLog(@"Removing map view overlay with coordinate.latitude: %f, coordinate.longitude: %f", overlay.coordinate.latitude, overlay.coordinate.longitude);
+            
+            [mapView removeOverlay:overlay];
+            break;
+        }
+    }
+}
+
++ (void)mapView:(MKMapView *)mapView removeAnnotationWithLatitude:(double)latitude andLongitude:(double)longitude {
+    
+    // Remove first map pin annotation with the given center latitude and longitude
+    
+    for (id<MKAnnotation> item in [mapView annotations]) {
+        id<MKAnnotation> annotation = (id<MKAnnotation>)item;
+        
+        if (latitude == annotation.coordinate.latitude && longitude == annotation.coordinate.longitude) {
+            
+            NSLog(@"Removing annotation annotation with coordinate.latitude: %f, coordinate.longitude: %f", annotation.coordinate.latitude, annotation.coordinate.longitude);
+            
+            [mapView removeAnnotation:annotation];
+            break;
+        }
+    }
+}
+
+#pragma mark - mapview annotation callback
+
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
+    
+    // If the annotation is the user location, just return nil.
+    if ([annotation isKindOfClass:[MKUserLocation class]])
+        return nil;
+    
+    // Try to dequeue an existing pin view first.
+    MKPinAnnotationView* pinView = (MKPinAnnotationView*)[mapView dequeueReusableAnnotationViewWithIdentifier:@"CustomPinAnnotationView"];
+    
+    if (pinView) {
+        pinView.annotation = annotation;
+        return pinView;
+    }
+    
+    // If no pin view already exists, create a new one.
+    MKPinAnnotationView *customPinView = [[MKPinAnnotationView alloc]
+                                          initWithAnnotation:annotation reuseIdentifier:@"CustomPinAnnotationView"];
+    customPinView.pinColor = MKPinAnnotationColorGreen;
+    customPinView.animatesDrop = YES;
+    customPinView.canShowCallout = YES;
+    
+    // Because this is an iOS app, add the detail disclosure button to display details about the annotation in another view.
+    UIImage *trashBinImage = [UIImage imageNamed:@"trash_bin"];
+    UIButton *deleteButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+    [deleteButton setImage:trashBinImage forState:UIControlStateNormal];
+    [deleteButton addTarget:nil action:nil forControlEvents:UIControlEventTouchUpInside];
+    deleteButton.tag = 1;
+    customPinView.leftCalloutAccessoryView = deleteButton;
+    
+    UIButton *moreInfoButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+    [moreInfoButton addTarget:nil action:nil forControlEvents:UIControlEventTouchUpInside];
+    moreInfoButton.tag = 2;
+    customPinView.rightCalloutAccessoryView = moreInfoButton;
+    
+    return customPinView;
+}
+
+#pragma mark - mapview callbacks
+
+- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
+    
+    double annotationLatitude = view.annotation.coordinate.latitude;
+    double annotationLongitude = view.annotation.coordinate.longitude;
+    
+    NSLog(@"annotationLatitude: %f, annotationLongitude: %f", annotationLatitude, annotationLongitude);
+    NSLog(@"%@",view.annotation.title);
+    NSLog(@"%@",view.annotation.subtitle);
+    NSLog(@"%@", control);
+    
+    if (1 == control.tag) {
+        
+        [self deleteGeoFenceWithLatitude:annotationLatitude andLongitude:annotationLongitude fromMapView:mapView];
     }
 }
 
@@ -97,46 +433,26 @@
     self.mapIsMoving = NO;
 }
 
-- (void)setUpGeoRegion {
-    // Create the geographic region to be monitored
-    self.circularGeoRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(30.021720, 31.250567) radius:3 identifier:@"MyRegionIdentifier"];
-    
-    // Add an annotation
-    MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
-    point.coordinate = CLLocationCoordinate2DMake(30.021720, 31.250567);
-    point.title = @"Where am I?";
-    point.subtitle = @"I'm here!!!";
-    
-    [self.mapView addAnnotation:point];
+- (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay {
+    MKCircleRenderer *circleRenderer = [[MKCircleRenderer alloc] initWithOverlay:overlay];
+    circleRenderer.strokeColor = [UIColor redColor];
+    circleRenderer.fillColor = [UIColor colorWithRed:1.0 green:0 blue:0 alpha:0.2];
+    circleRenderer.lineWidth = 1.0;
+    return circleRenderer;
 }
 
-- (IBAction)switchTapped:(id)sender {
+#pragma mark - long press gesture recognizer
+
+- (IBAction)handleLongPress:(UIGestureRecognizer *)gestureRecognizer {
     
-    if (self.activateSwitch.isOn) {
-        self.mapView.showsUserLocation = YES;
-        [self.locationManager startUpdatingLocation];
-        [self.locationManager startMonitoringForRegion:self.circularGeoRegion];
-        self.statusCheckBarButton.enabled = YES;
-    } else {
-        self.statusCheckBarButton.enabled = NO;
-        [self.locationManager stopMonitoringForRegion:self.circularGeoRegion];
-        [self.locationManager stopUpdatingLocation];
-        self.mapView.showsUserLocation = NO;
+    if (gestureRecognizer.state != UIGestureRecognizerStateBegan) {
+        return;
     }
-}
-
-- (IBAction)statusCheckTapped:(id)sender {
-    [self.locationManager requestStateForRegion:self.circularGeoRegion];
-}
-
-- (void)addCurrentAnnotation {
-    self.currentAnnotation = [[MKPointAnnotation alloc] init];
-    self.currentAnnotation.coordinate = CLLocationCoordinate2DMake(0.0, 0.0);
-    self.currentAnnotation.title = @"My Location";
-}
-
-- (void)centerMap:(MKPointAnnotation *)centerPoint {
-    [self.mapView setCenterCoordinate:centerPoint.coordinate animated:YES];
+    
+    CGPoint touchPoint = [gestureRecognizer locationInView:self.mapView];
+    CLLocationCoordinate2D touchMapCoordinate = [self.mapView convertPoint:touchPoint toCoordinateFromView:self.mapView];
+    
+    [self createCustomGeoFenceWithLatitude:touchMapCoordinate.latitude andLongitude:touchMapCoordinate.longitude];
 }
 
 #pragma mark - location callbacks
@@ -163,24 +479,61 @@
 }
 
 - (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region {
+    
+    if ([region isKindOfClass:[CLCircularRegion class]]) {
+        
+        CLCircularRegion *circularRegion = (CLCircularRegion *)region;
+        
+        NSLog(@"Did enter circularRegion.center.latitude: %f, circularRegion.center.longitude: %f", circularRegion.center.latitude, circularRegion.center.longitude);
+    }
+    
     UILocalNotification *locationNotification = [[UILocalNotification alloc] init];
     locationNotification.fireDate = nil;
     locationNotification.repeatInterval = 0;
-    locationNotification.alertTitle = @"Geofence Alert!";
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.2")) {
+        locationNotification.alertTitle = @"Geofence Alert!";
+    }
+    
     locationNotification.alertBody = [NSString stringWithFormat:@"You entered a geofence"];
     [[UIApplication sharedApplication] scheduleLocalNotification:locationNotification];
     self.eventLabel.text = @"Entered";
 }
 
 - (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
+    
+    if ([region isKindOfClass:[CLCircularRegion class]]) {
+        
+        CLCircularRegion *circularRegion = (CLCircularRegion *)region;
+        
+        NSLog(@"Did exit circularRegion.center.latitude: %f, circularRegion.center.longitude: %f", circularRegion.center.latitude, circularRegion.center.longitude);
+    }
+    
     UILocalNotification *locationNotification = [[UILocalNotification alloc] init];
     locationNotification.fireDate = nil;
     locationNotification.repeatInterval = 0;
-    locationNotification.alertTitle = @"Geofence Alert!";
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.2")) {
+        locationNotification.alertTitle = @"Geofence Alert!";
+    }
+    
     locationNotification.alertBody = [NSString stringWithFormat:@"You left a geofence"];
     [[UIApplication sharedApplication] scheduleLocalNotification:locationNotification];
     self.eventLabel.text = @"Exited";
 
+}
+
+#pragma mark - user defaults
+
++ (void)saveGeoFences:(NSDictionary<NSString *, GeoFence *> *)geoFences {
+    NSData *geoFencesData = [NSKeyedArchiver archivedDataWithRootObject:geoFences];
+    [[NSUserDefaults standardUserDefaults] setObject:geoFencesData forKey:geoFencesDataKey];
+}
+
++ (NSDictionary<NSString *, GeoFence *> *)loadGeoFences {
+    NSData *geoFencesData = [[NSUserDefaults standardUserDefaults] objectForKey:geoFencesDataKey];
+    NSDictionary<NSString *,GeoFence *> *geoFencesDictionary = [NSKeyedUnarchiver unarchiveObjectWithData:geoFencesData];
+    return geoFencesDictionary;
 }
 
 @end

@@ -290,7 +290,7 @@ NSString *const geoFencesDataKey = @"geoFencesData";
 
 + (void)mapView:(MKMapView *)mapView removeAnnotationWithLatitude:(double)latitude andLongitude:(double)longitude {
     
-    // Remove all map pin annotations with the given center latitude and longitude
+    // Remove first map pin annotation with the given center latitude and longitude
     
     for (id<MKAnnotation> item in [mapView annotations]) {
         id<MKAnnotation> annotation = (id<MKAnnotation>)item;
@@ -300,6 +300,7 @@ NSString *const geoFencesDataKey = @"geoFencesData";
             NSLog(@"Removing annotation annotation with coordinate.latitude: %f, coordinate.longitude: %f", annotation.coordinate.latitude, annotation.coordinate.longitude);
             
             [mapView removeAnnotation:annotation];
+            break;
         }
     }
 }

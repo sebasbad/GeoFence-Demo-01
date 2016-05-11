@@ -300,7 +300,6 @@ NSString *const geoFencesDataKey = @"geoFencesData";
             NSLog(@"Removing annotation annotation with coordinate.latitude: %f, coordinate.longitude: %f", annotation.coordinate.latitude, annotation.coordinate.longitude);
             
             [mapView removeAnnotation:annotation];
-            break;
         }
     }
 }

@@ -232,7 +232,7 @@ NSString *const geoFencesDataKey = @"geoFencesData";
 
 - (void)deleteGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude fromMapView:(MKMapView *)mapView {
     
-    // Delete "first" geo fence with given center latitude and longitude
+    // Delete "first" geo fence with the given center latitude and longitude
     
     for (id item in [self.geoFences allKeys]) {
         NSString *geoFenceKey = (NSString *)item;
@@ -254,7 +254,7 @@ NSString *const geoFencesDataKey = @"geoFencesData";
 
 - (void)deleteRegionWithLatitude:(double)latitude andLongitude:(double)longitude {
     
-    // Delete "first" circular region with given center latitude and longitude
+    // Delete "first" circular region with the given center latitude and longitude
     
     for (id item in [self.circularGeoRegions allKeys]) {
         NSString *circularRegionKey = (NSString *)item;
@@ -273,7 +273,7 @@ NSString *const geoFencesDataKey = @"geoFencesData";
 
 + (void)mapView:(MKMapView *)mapView removeOverlayWithLatitude:(double)latitude andLongitude:(double)longitude {
     
-    // Remove first map overlay with given center latitude and longitude
+    // Remove first map overlay with the given center latitude and longitude
     
     for (id<MKOverlay> item in [mapView overlays]) {
         id<MKOverlay> overlay = (id<MKOverlay>)item;
@@ -290,7 +290,7 @@ NSString *const geoFencesDataKey = @"geoFencesData";
 
 + (void)mapView:(MKMapView *)mapView removeAnnotationWithLatitude:(double)latitude andLongitude:(double)longitude {
     
-    // Remove first map pin annotation
+    // Remove all map pin annotations with the given center latitude and longitude
     
     for (id<MKAnnotation> item in [mapView annotations]) {
         id<MKAnnotation> annotation = (id<MKAnnotation>)item;

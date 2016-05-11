@@ -230,6 +230,81 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     [self.mapView setCenterCoordinate:centerPoint.coordinate animated:YES];
 }
 
+- (void)deleteGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude fromMapView:(MKMapView *)mapView {
+    
+    // Delete "first" geo fence with given center latitude and longitude
+    
+    for (id item in [self.geoFences allKeys]) {
+        NSString *geoFenceKey = (NSString *)item;
+        GeoFence *geoFence = (GeoFence *)self.geoFences[geoFenceKey];
+        
+        if (latitude == geoFence.centerLatitude && longitude == geoFence.centerLongitude) {
+        
+            [self deleteRegionWithLatitude:latitude andLongitude:longitude];
+            [ViewController mapView:mapView removeOverlayWithLatitude:latitude andLongitude:longitude];
+            [ViewController mapView:mapView removeAnnotationWithLatitude:latitude andLongitude:longitude];
+            
+            NSLog(@"Deleting geo fence with center latitude: %f, longitude: %f", geoFence.centerLatitude, geoFence.centerLongitude);
+            
+            [self.geoFences removeObjectForKey:geoFenceKey];
+            break;
+        }
+    }
+}
+
+- (void)deleteRegionWithLatitude:(double)latitude andLongitude:(double)longitude {
+    
+    // Delete "first" circular region with given center latitude and longitude
+    
+    for (id item in [self.circularGeoRegions allKeys]) {
+        NSString *circularRegionKey = (NSString *)item;
+        CLCircularRegion *circularRegion = (CLCircularRegion *)self.circularGeoRegions[circularRegionKey];
+        
+        if (latitude == circularRegion.center.latitude && longitude == circularRegion.center.longitude) {
+            
+            NSLog(@"Deleting circular region with key: %@ center.latitude: %f, center.longitude: %f", circularRegionKey, circularRegion.center.latitude, circularRegion.center.longitude);
+            
+            [self.locationManager stopMonitoringForRegion:circularRegion];
+            [self.circularGeoRegions removeObjectForKey:circularRegionKey];
+            break;
+        }
+    }
+}
+
++ (void)mapView:(MKMapView *)mapView removeOverlayWithLatitude:(double)latitude andLongitude:(double)longitude {
+    
+    // Remove first map overlay with given center latitude and longitude
+    
+    for (id<MKOverlay> item in [mapView overlays]) {
+        id<MKOverlay> overlay = (id<MKOverlay>)item;
+        
+        if (latitude == overlay.coordinate.latitude && longitude == overlay.coordinate.longitude) {
+            
+            NSLog(@"Removing map view overlay with coordinate.latitude: %f, coordinate.longitude: %f", overlay.coordinate.latitude, overlay.coordinate.longitude);
+            
+            [mapView removeOverlay:overlay];
+            break;
+        }
+    }
+}
+
++ (void)mapView:(MKMapView *)mapView removeAnnotationWithLatitude:(double)latitude andLongitude:(double)longitude {
+    
+    // Remove first map pin annotation
+    
+    for (id<MKAnnotation> item in [mapView annotations]) {
+        id<MKAnnotation> annotation = (id<MKAnnotation>)item;
+        
+        if (latitude == annotation.coordinate.latitude && longitude == annotation.coordinate.longitude) {
+            
+            NSLog(@"Removing annotation annotation with coordinate.latitude: %f, coordinate.longitude: %f", annotation.coordinate.latitude, annotation.coordinate.longitude);
+            
+            [mapView removeAnnotation:annotation];
+            break;
+        }
+    }
+}
+
 #pragma mark - mapview annotation callback
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
@@ -283,61 +358,7 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     
     if (1 == control.tag) {
         
-        // Remove circular regions
-        
-        for (id item in [self.circularGeoRegions allKeys]) {
-            NSString *circularRegionKey = (NSString *)item;
-            CLCircularRegion *circularRegion = (CLCircularRegion *)self.circularGeoRegions[circularRegionKey];
-            
-            NSLog(@"circularRegion.center.latitude: %f, circularRegion.center.longitude: %f", circularRegion.center.latitude, circularRegion.center.longitude);
-            
-            if (annotationLatitude == circularRegion.center.latitude && annotationLongitude == circularRegion.center.longitude) {
-                [self.locationManager stopMonitoringForRegion:circularRegion];
-                [self.circularGeoRegions removeObjectForKey:circularRegionKey];
-                break;
-            }
-        }
-        
-        // Remove map circular overlay
-        
-        for (id<MKOverlay> item in [mapView overlays]) {
-            id<MKOverlay> overlay = (id<MKOverlay>)item;
-            
-            NSLog(@"overlay.coordinate.latitude: %f, overlay.coordinate.longitude: %f", overlay.coordinate.latitude, overlay.coordinate.longitude);
-            
-            if (annotationLatitude == overlay.coordinate.latitude && annotationLongitude == overlay.coordinate.longitude) {
-                [mapView removeOverlay:overlay];
-                break;
-            }
-        }
-        
-        // Remove map pin annotation
-        
-        for (id<MKAnnotation> item in [mapView annotations]) {
-            id<MKAnnotation> annotation = (id<MKAnnotation>)item;
-            
-            NSLog(@"annotation.coordinate.latitude: %f, annotation.coordinate.longitude: %f", annotation.coordinate.latitude, annotation.coordinate.longitude);
-            
-            if (annotationLatitude == annotation.coordinate.latitude && annotationLongitude == annotation.coordinate.longitude) {
-                [mapView removeAnnotation:annotation];
-                break;
-            }
-        }
-        
-        // Remove geo fence
-        
-        for (id item in [self.geoFences allKeys]) {
-            NSString *geoFenceKey = (NSString *)item;
-            GeoFence *geoFence = (GeoFence *)self.geoFences[geoFenceKey];
-            
-            NSLog(@"geoFence.centerLatitude: %f, geoFence.centerLongitude: %f", geoFence.centerLatitude, geoFence.centerLongitude);
-            
-            if (annotationLatitude == geoFence.centerLatitude && annotationLongitude == geoFence.centerLongitude) {
-                //[self removeGeoFence:geoFence onMapView:mapView];
-                [self.geoFences removeObjectForKey:geoFenceKey];
-                break;
-            }
-        }
+        [self deleteGeoFenceWithLatitude:annotationLatitude andLongitude:annotationLongitude fromMapView:mapView];
     }
 }
 

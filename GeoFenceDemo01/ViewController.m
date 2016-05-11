@@ -388,11 +388,6 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     CGPoint touchPoint = [gestureRecognizer locationInView:self.mapView];
     CLLocationCoordinate2D touchMapCoordinate = [self.mapView convertPoint:touchPoint toCoordinateFromView:self.mapView];
     
-    MKPointAnnotation *pointAnnotation = [[MKPointAnnotation alloc] init];
-    pointAnnotation.coordinate = touchMapCoordinate;
-    
-    [self.mapView addAnnotation:pointAnnotation];
-    
     GeoFence *geoFence = [self setUpCircularGeoRegionWithLatitude:touchMapCoordinate.latitude andLongitude:touchMapCoordinate.longitude andRadiusInMeters:3 andIdentifier:@"MyRegionIdentifier" andTitle:@"Where am I?" andSubtitle:@"I'm here!!!"];
     
     [self drawGeoFence:geoFence onMapView:self.mapView];

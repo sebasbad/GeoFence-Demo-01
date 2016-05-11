@@ -387,7 +387,7 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     // If no pin view already exists, create a new one.
     MKPinAnnotationView *customPinView = [[MKPinAnnotationView alloc]
                                           initWithAnnotation:annotation reuseIdentifier:@"CustomPinAnnotationView"];
-    customPinView.pinColor = MKPinAnnotationColorPurple;
+    customPinView.pinColor = MKPinAnnotationColorGreen;
     customPinView.animatesDrop = YES;
     customPinView.canShowCallout = YES;
     

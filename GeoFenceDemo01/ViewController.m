@@ -230,6 +230,69 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     [self.mapView setCenterCoordinate:centerPoint.coordinate animated:YES];
 }
 
+# pragma mark - geo fence creation and management methods
+
+- (void)createCustomGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude {
+    
+    NSString *alertTitle = @"New Geo Fence";
+    NSString *alertMessage = @"Fill in the Geo Fence data";
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:alertTitle message:alertMessage preferredStyle:UIAlertControllerStyleAlert];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = NSLocalizedString(@"IdentifierPlaceholder", @"Identifier");
+        textField.text = @"MyRegionIdentifier";
+    }];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = NSLocalizedString(@"TitlePlaceholder", @"Title");
+        textField.text = @"Where am I?";
+    }];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = NSLocalizedString(@"SubtitlePlaceholder", @"Subtitle");
+        textField.text = @"I'm here!!!";
+    }];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = NSLocalizedString(@"RadiusPlaceholder", @"Radius in meters");
+        textField.keyboardType = UIKeyboardTypeNumberPad;
+        textField.text = @"3";
+    }];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel action") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+        NSLog(@"Cancel action");
+    }];
+    
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK action") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        
+        UITextField *identifierTextField = alertController.textFields.firstObject;
+        UITextField *titleTextField = alertController.textFields[1];
+        UITextField *subtitleTextField = alertController.textFields[2];
+        UITextField *radiusTextField = alertController.textFields.lastObject;
+        
+        NSString *identifier = nil == identifierTextField.text ? @"MyRegionIdentifier" : identifierTextField.text;
+        NSString *title = nil == titleTextField.text ? @"MyRegionIdentifier" : titleTextField.text;
+        NSString *subtitle = nil == subtitleTextField.text ? @"I'm here!!!" : subtitleTextField.text;
+        
+        NSNumber *radiusNumber = [[[NSNumberFormatter alloc] init] numberFromString:radiusTextField.text];
+        NSInteger radius = [radiusNumber integerValue];
+        radius = radius <= 0 ? 3 : radius;
+        
+        GeoFence *geoFence = [self setUpCircularGeoRegionWithLatitude:latitude andLongitude:longitude andRadiusInMeters:radius andIdentifier:identifier andTitle:title andSubtitle:subtitle];
+        
+        [self drawGeoFence:geoFence onMapView:self.mapView];
+        
+    }];
+    
+    [alertController addAction:cancelAction];
+    [alertController addAction:okAction];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
+# pragma mark - geo fence removal methods
+
 - (void)deleteGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude fromMapView:(MKMapView *)mapView {
     
     // Delete "first" geo fence with the given center latitude and longitude
@@ -389,9 +452,7 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     CGPoint touchPoint = [gestureRecognizer locationInView:self.mapView];
     CLLocationCoordinate2D touchMapCoordinate = [self.mapView convertPoint:touchPoint toCoordinateFromView:self.mapView];
     
-    GeoFence *geoFence = [self setUpCircularGeoRegionWithLatitude:touchMapCoordinate.latitude andLongitude:touchMapCoordinate.longitude andRadiusInMeters:3 andIdentifier:@"MyRegionIdentifier" andTitle:@"Where am I?" andSubtitle:@"I'm here!!!"];
-    
-    [self drawGeoFence:geoFence onMapView:self.mapView];
+    [self createCustomGeoFenceWithLatitude:touchMapCoordinate.latitude andLongitude:touchMapCoordinate.longitude];
 }
 
 #pragma mark - location callbacks

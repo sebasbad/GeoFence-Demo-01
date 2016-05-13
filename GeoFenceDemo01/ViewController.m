@@ -501,23 +501,31 @@ NSString *const geoFencesDataKey = @"geoFencesData";
 
 - (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region {
     
+    GeoFence *geoFence;
+    
     if ([region isKindOfClass:[CLCircularRegion class]]) {
         
         CLCircularRegion *circularRegion = (CLCircularRegion *)region;
         
         NSLog(@"Did enter circularRegion.center.latitude: %f, circularRegion.center.longitude: %f", circularRegion.center.latitude, circularRegion.center.longitude);
+        
+        geoFence = [self findFirstGeoFenceWithLatitude:circularRegion.center.latitude andLongitude: circularRegion.center.latitude];
     }
     
     UILocalNotification *locationNotification = [[UILocalNotification alloc] init];
     locationNotification.fireDate = nil;
     locationNotification.repeatInterval = 0;
     
+    NSString *notificationAlertTitle = [NSString stringWithFormat:@"Geofence Alert: %@ !", nil != geoFence ? geoFence.identifier :  @"Unknown"];
+    NSString *notificationAlertBody = [NSString stringWithFormat:@"You entered: %@", nil != geoFence ? [NSString stringWithFormat:@"%@, %@", geoFence.title, geoFence.subtitle] : @"Unknown"];
+    
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.2")) {
-        locationNotification.alertTitle = @"Geofence Alert!";
+        locationNotification.alertTitle = notificationAlertTitle;
     }
     
-    locationNotification.alertBody = [NSString stringWithFormat:@"You entered a geofence"];
+    locationNotification.alertBody = notificationAlertBody;
     [[UIApplication sharedApplication] scheduleLocalNotification:locationNotification];
+    
     self.eventLabel.text = @"Entered";
 }
 

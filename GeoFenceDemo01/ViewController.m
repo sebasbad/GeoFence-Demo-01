@@ -531,22 +531,29 @@ NSString *const geoFencesDataKey = @"geoFencesData";
 
 - (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
     
+    GeoFence *geoFence;
+    
     if ([region isKindOfClass:[CLCircularRegion class]]) {
         
         CLCircularRegion *circularRegion = (CLCircularRegion *)region;
         
         NSLog(@"Did exit circularRegion.center.latitude: %f, circularRegion.center.longitude: %f", circularRegion.center.latitude, circularRegion.center.longitude);
+        
+        geoFence = [self findFirstGeoFenceWithLatitude:circularRegion.center.latitude andLongitude: circularRegion.center.latitude];
     }
     
     UILocalNotification *locationNotification = [[UILocalNotification alloc] init];
     locationNotification.fireDate = nil;
     locationNotification.repeatInterval = 0;
     
+    NSString *notificationAlertTitle = [NSString stringWithFormat:@"Geofence Alert: %@ !", nil != geoFence ? geoFence.identifier :  @"Unknown"];
+    NSString *notificationAlertBody = [NSString stringWithFormat:@"You left: %@", nil != geoFence ? [NSString stringWithFormat:@"%@, %@", geoFence.title, geoFence.subtitle] : @"Unknown"];
+    
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.2")) {
-        locationNotification.alertTitle = @"Geofence Alert!";
+        locationNotification.alertTitle = notificationAlertTitle;
     }
     
-    locationNotification.alertBody = [NSString stringWithFormat:@"You left a geofence"];
+    locationNotification.alertBody = [NSString stringWithFormat:notificationAlertBody];
     [[UIApplication sharedApplication] scheduleLocalNotification:locationNotification];
     self.eventLabel.text = @"Exited";
 

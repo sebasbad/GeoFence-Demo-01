@@ -8,6 +8,7 @@
 
 #import "MapKit/MapKit.h"
 #import "ViewController.h"
+#import "GeoFence+UserDefaults.h"
 #import "SystemVersionVerificationHelper.h"
 #import "GeoFence.h"
 
@@ -34,8 +35,6 @@
 
 @implementation ViewController
 
-NSString *const geoFencesDataKey = @"geoFencesData";
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -59,7 +58,7 @@ NSString *const geoFencesDataKey = @"geoFencesData";
 
 - (void)loadCircularRegions {
     self.geoFences = [[NSMutableDictionary<NSString *,GeoFence *> alloc] init];
-    [self.geoFences addEntriesFromDictionary: [ViewController loadGeoFences]];
+    [self.geoFences addEntriesFromDictionary: [GeoFence loadGeoFences]];
     
     self.circularGeoRegions = [[NSMutableDictionary<NSString *, CLCircularRegion *> alloc] init];
     
@@ -156,7 +155,7 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     [self.circularGeoRegions setObject:circularGeoRegion forKey:geoFence.identifier];
     [self.geoFences setObject:geoFence forKey:geoFence.identifier];
     
-    [ViewController saveGeoFences:self.geoFences];
+    [GeoFence saveGeoFences:self.geoFences];
     
     return geoFence;
 }
@@ -556,20 +555,6 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     locationNotification.alertBody = [NSString stringWithFormat:notificationAlertBody];
     [[UIApplication sharedApplication] scheduleLocalNotification:locationNotification];
     self.eventLabel.text = @"Exited";
-
-}
-
-#pragma mark - user defaults
-
-+ (void)saveGeoFences:(NSDictionary<NSString *, GeoFence *> *)geoFences {
-    NSData *geoFencesData = [NSKeyedArchiver archivedDataWithRootObject:geoFences];
-    [[NSUserDefaults standardUserDefaults] setObject:geoFencesData forKey:geoFencesDataKey];
-}
-
-+ (NSDictionary<NSString *, GeoFence *> *)loadGeoFences {
-    NSData *geoFencesData = [[NSUserDefaults standardUserDefaults] objectForKey:geoFencesDataKey];
-    NSDictionary<NSString *,GeoFence *> *geoFencesDictionary = [NSKeyedUnarchiver unarchiveObjectWithData:geoFencesData];
-    return geoFencesDictionary;
 }
 
 @end

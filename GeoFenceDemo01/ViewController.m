@@ -30,7 +30,6 @@
 
 @property (strong, nonatomic) IBOutlet UILongPressGestureRecognizer *longPressGestureRecognizer;
 
-
 @end
 
 @implementation ViewController
@@ -293,7 +292,7 @@ NSString *const geoFencesDataKey = @"geoFencesData";
 
 # pragma mark - geo fence find methods
 
-- (GeoFence *)findGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude {
+- (GeoFence *)findFirstGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude {
     
     GeoFence *foundGeoFence;
     

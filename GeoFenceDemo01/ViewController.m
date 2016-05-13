@@ -291,6 +291,28 @@ NSString *const geoFencesDataKey = @"geoFencesData";
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
+# pragma mark - geo fence find methods
+
+- (GeoFence *)findGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude {
+    
+    GeoFence *foundGeoFence;
+    
+    // Find "first" geo fence with the given center latitude and longitude
+    
+    for (id item in [self.geoFences allKeys]) {
+        NSString *geoFenceKey = (NSString *)item;
+        GeoFence *geoFence = (GeoFence *)self.geoFences[geoFenceKey];
+        
+        if (latitude == geoFence.centerLatitude && longitude == geoFence.centerLongitude) {
+            
+            foundGeoFence = geoFence;
+            break;
+        }
+    }
+    
+    return foundGeoFence;
+}
+
 # pragma mark - geo fence removal methods
 
 - (void)deleteGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude fromMapView:(MKMapView *)mapView {

@@ -25,7 +25,12 @@
 - (void)drawGeoFencesOnMapView:mapView;
 - (void)drawGeoFence:(GeoFence *)geoFence onMapView:(MKMapView *)mapView;
 
+- (GeoFence *)createGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude andRadiusInMeters:(NSInteger)radius andIdentifier:(NSString *)identifier andTitle:(NSString *)title andSubtitle:(NSString *)subtitle;
+
 - (GeoFence *)findFirstGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude;
+
+- (void)loadCircularRegions;
+
 
 
 @end

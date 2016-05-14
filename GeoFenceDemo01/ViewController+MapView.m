@@ -6,6 +6,7 @@
 //  Copyright © 2016 Sebastian Badea. All rights reserved.
 //
 
+#import "GeoFence+UserDefaults.h"
 #import "ViewController+LocationManager.h"
 #import "ViewController+MapView.h"
 
@@ -46,6 +47,44 @@
 - (void)setMapIsMoving: (BOOL) mapIsMoving {
     NSNumber *numberMapIsMoving = [NSNumber numberWithBool: mapIsMoving];
     objc_setAssociatedObject(self, @selector(mapIsMoving), numberMapIsMoving, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+# pragma mark - circular regions helper methods
+
+- (void)loadCircularRegions {
+    self.geoFences = [[NSMutableDictionary<NSString *,GeoFence *> alloc] init];
+    [self.geoFences addEntriesFromDictionary: [GeoFence loadGeoFences]];
+    
+    self.circularGeoRegions = [[NSMutableDictionary<NSString *, CLCircularRegion *> alloc] init];
+    
+    for (id item in [self.geoFences allValues]) {
+        GeoFence *geoFence = (GeoFence *)item;
+        
+        CLLocationCoordinate2D locationCoordinate2D = CLLocationCoordinate2DMake(geoFence.centerLatitude, geoFence.centerLongitude);
+        CLCircularRegion *circularRegion = [[CLCircularRegion alloc] initWithCenter:locationCoordinate2D radius:geoFence.radius identifier:geoFence.identifier];
+        
+        [self.circularGeoRegions setObject:circularRegion forKey:geoFence.identifier];
+    }
+}
+
+- (GeoFence *)createGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude andRadiusInMeters:(NSInteger)radius andIdentifier:(NSString *)identifier andTitle:(NSString *)title andSubtitle:(NSString *)subtitle {
+    
+    NSString *geoFenceIdentifier = [NSString stringWithFormat:@"%lu.%@", self.geoFences.count, identifier];
+    NSString *geoFenceTitle = [NSString stringWithFormat:@"%lu.%@", self.geoFences.count, title];
+    NSString *geoFenceSubtitle = [NSString stringWithFormat:@"%lu.%@", self.geoFences.count, subtitle];
+    
+    // Create geo fence
+    GeoFence *geoFence = [[GeoFence alloc] initWithLatitude:latitude andLongitude:longitude andRadius:radius andIdentifier:geoFenceIdentifier andTitle:geoFenceTitle andSubtitle:geoFenceSubtitle];
+    
+    // Create the geographic region to be monitored
+    CLCircularRegion *circularGeoRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(latitude, longitude) radius:radius identifier:geoFenceIdentifier];
+    
+    [self.circularGeoRegions setObject:circularGeoRegion forKey:geoFence.identifier];
+    [self.geoFences setObject:geoFence forKey:geoFence.identifier];
+    
+    [GeoFence saveGeoFences:self.geoFences];
+    
+    return geoFence;
 }
 
 # pragma mark - mapview helper methods

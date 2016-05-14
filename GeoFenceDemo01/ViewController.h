@@ -10,6 +10,10 @@
 
 @interface ViewController : UIViewController
 
+- (void)enableActivateSwitch;
+- (void)setStatusLabelText:(NSString *)text;
+
+- (void)centerMapView:(MKPointAnnotation *)centerPoint;
 
 @end
 

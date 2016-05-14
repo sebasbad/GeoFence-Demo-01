@@ -9,6 +9,7 @@
 #import "MapKit/MapKit.h"
 #import "ViewController.h"
 #import "GeoFence+UserDefaults.h"
+#import "ViewController+LocationManager.h"
 #import "ViewController+MapView.h"
 #import "SystemVersionVerificationHelper.h"
 #import "GeoFence.h"
@@ -20,8 +21,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *statusLabel;
 @property (weak, nonatomic) IBOutlet UILabel *eventLabel;
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
-
-@property (strong, nonatomic) CLLocationManager *locationManager;
 
 @property (strong, nonatomic) MKPointAnnotation *currentAnnotation;
 

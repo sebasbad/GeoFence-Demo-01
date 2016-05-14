@@ -22,6 +22,14 @@
     objc_setAssociatedObject(self, @selector(locationManager), locationManager, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (MKPointAnnotation *) currentLocationAnnotation {
+    return objc_getAssociatedObject(self, @selector(currentLocationAnnotation));
+}
+
+- (void)setCurrentLocationAnnotation: (MKPointAnnotation *) currentLocationAnnotation {
+    objc_setAssociatedObject(self, @selector(currentLocationAnnotation), currentLocationAnnotation, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 # pragma mark - location manager helper methods
 
 - (void)configureLocationManager {

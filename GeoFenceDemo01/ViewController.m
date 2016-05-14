@@ -22,8 +22,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *eventLabel;
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 
-@property (strong, nonatomic) MKPointAnnotation *currentAnnotation;
-
 @property (strong, nonatomic) IBOutlet UILongPressGestureRecognizer *longPressGestureRecognizer;
 
 @end

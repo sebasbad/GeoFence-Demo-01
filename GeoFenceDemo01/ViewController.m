@@ -48,24 +48,10 @@
     
     [self configureGeoLocationAuthorization];
     
-    [self drawGeoFencesOnMap];
+    [self drawGeoFencesOnMapView:self.mapView];
 }
 
-- (void)loadCircularRegions {
-    self.geoFences = [[NSMutableDictionary<NSString *,GeoFence *> alloc] init];
-    [self.geoFences addEntriesFromDictionary: [GeoFence loadGeoFences]];
-    
-    self.circularGeoRegions = [[NSMutableDictionary<NSString *, CLCircularRegion *> alloc] init];
-    
-    for (id item in [self.geoFences allValues]) {
-        GeoFence *geoFence = (GeoFence *)item;
-        
-        CLLocationCoordinate2D locationCoordinate2D = CLLocationCoordinate2DMake(geoFence.centerLatitude, geoFence.centerLongitude);
-        CLCircularRegion *circularRegion = [[CLCircularRegion alloc] initWithCenter:locationCoordinate2D radius:geoFence.radius identifier:geoFence.identifier];
-        
-        [self.circularGeoRegions setObject:circularRegion forKey:geoFence.identifier];
-    }
-}
+# pragma mark - UI methods
 
 - (void)configureUI {
     // Turn off the User Interface until permission is obtained
@@ -81,11 +67,34 @@
     self.statusLabel.text = text;
 }
 
-- (void)drawGeoFencesOnMap {
+- (IBAction)switchTapped:(id)sender {
+    
+    if (self.activateSwitch.isOn) {
+        self.mapView.showsUserLocation = YES;
+        [self.locationManager startUpdatingLocation];
+        [self locationManager:self.locationManager startMonitoringForRegions:self.circularGeoRegions];
+        self.statusCheckBarButton.enabled = YES;
+    } else {
+        self.statusCheckBarButton.enabled = NO;
+        [self locationManager:self.locationManager stopMonitoringForRegions:self.circularGeoRegions];
+        [self.locationManager stopUpdatingLocation];
+        self.mapView.showsUserLocation = NO;
+    }
+}
+
+- (void)loadCircularRegions {
+    self.geoFences = [[NSMutableDictionary<NSString *,GeoFence *> alloc] init];
+    [self.geoFences addEntriesFromDictionary: [GeoFence loadGeoFences]];
+    
+    self.circularGeoRegions = [[NSMutableDictionary<NSString *, CLCircularRegion *> alloc] init];
+    
     for (id item in [self.geoFences allValues]) {
         GeoFence *geoFence = (GeoFence *)item;
         
-        [self drawGeoFence:geoFence onMapView:self.mapView];
+        CLLocationCoordinate2D locationCoordinate2D = CLLocationCoordinate2DMake(geoFence.centerLatitude, geoFence.centerLongitude);
+        CLCircularRegion *circularRegion = [[CLCircularRegion alloc] initWithCenter:locationCoordinate2D radius:geoFence.radius identifier:geoFence.identifier];
+        
+        [self.circularGeoRegions setObject:circularRegion forKey:geoFence.identifier];
     }
 }
 
@@ -107,36 +116,6 @@
     [GeoFence saveGeoFences:self.geoFences];
     
     return geoFence;
-}
-
-- (void)drawGeoFence:(GeoFence *)geoFence onMapView:(MKMapView *)mapView{
-    
-    // Add an annotation
-    MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
-    point.coordinate = CLLocationCoordinate2DMake(geoFence.centerLatitude, geoFence.centerLongitude);
-    point.title = geoFence.title;
-    point.subtitle = geoFence.subtitle;
-    
-    [mapView addAnnotation:point];
-    
-    // 5. setup circle
-    MKCircle *circle = [MKCircle circleWithCenterCoordinate:point.coordinate radius:geoFence.radius];
-    [mapView addOverlay:circle];
-}
-
-- (IBAction)switchTapped:(id)sender {
-    
-    if (self.activateSwitch.isOn) {
-        self.mapView.showsUserLocation = YES;
-        [self.locationManager startUpdatingLocation];
-        [self locationManager:self.locationManager startMonitoringForRegions:self.circularGeoRegions];
-        self.statusCheckBarButton.enabled = YES;
-    } else {
-        self.statusCheckBarButton.enabled = NO;
-        [self locationManager:self.locationManager stopMonitoringForRegions:self.circularGeoRegions];
-        [self.locationManager stopUpdatingLocation];
-        self.mapView.showsUserLocation = NO;
-    }
 }
 
 - (void)locationManager:(CLLocationManager *)manager stopMonitoringForRegions:(NSDictionary<NSString *,CLCircularRegion *> *)circularGeoRegions {

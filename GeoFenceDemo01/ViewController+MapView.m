@@ -54,6 +54,29 @@
     [mapView setRegion:adjustedRegion animated:YES];
 }
 
+- (void)drawGeoFencesOnMapView:mapView {
+    for (id item in [self.geoFences allValues]) {
+        GeoFence *geoFence = (GeoFence *)item;
+        
+        [self drawGeoFence:geoFence onMapView:mapView];
+    }
+}
+
+- (void)drawGeoFence:(GeoFence *)geoFence onMapView:(MKMapView *)mapView {
+    
+    // Add an annotation
+    MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
+    point.coordinate = CLLocationCoordinate2DMake(geoFence.centerLatitude, geoFence.centerLongitude);
+    point.title = geoFence.title;
+    point.subtitle = geoFence.subtitle;
+    
+    [mapView addAnnotation:point];
+    
+    // 5. setup circle
+    MKCircle *circle = [MKCircle circleWithCenterCoordinate:point.coordinate radius:geoFence.radius];
+    [mapView addOverlay:circle];
+}
+
 # pragma mark - mapview callbacks
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {

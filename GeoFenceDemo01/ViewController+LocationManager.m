@@ -8,6 +8,7 @@
 
 #import <objc/runtime.h>
 #import "SystemVersionVerificationHelper.h"
+#import "ViewController+MapView.h"
 #import "ViewController+LocationManager.h"
 
 @implementation ViewController (LocationManager)
@@ -112,5 +113,88 @@
         [self enableActivateSwitch];
     }
 }
+
+#pragma mark - location manager callbacks
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
+    self.currentLocationAnnotation.coordinate = locations.lastObject.coordinate;
+    
+    if (!self.mapIsMoving) {
+        [self centerMap:self.currentLocationAnnotation];
+    }
+}
+
+- (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region {
+    
+    if (CLRegionStateUnknown == state) {
+        [self setStatusLabelText:@"Unknown"];
+    } else if (CLRegionStateInside == state) {
+        [self setStatusLabelText:@"Inside"];
+    } else if (CLRegionStateOutside == state) {
+        [self setStatusLabelText:@"Outside"];
+    } else {
+        [self setStatusLabelText:@"Mistery"];
+    }
+}
+
+- (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region {
+    
+    GeoFence *geoFence;
+    
+    if ([region isKindOfClass:[CLCircularRegion class]]) {
+        
+        CLCircularRegion *circularRegion = (CLCircularRegion *)region;
+        
+        NSLog(@"Did enter circularRegion.center.latitude: %f, circularRegion.center.longitude: %f", circularRegion.center.latitude, circularRegion.center.longitude);
+        
+        geoFence = [self findFirstGeoFenceWithLatitude:circularRegion.center.latitude andLongitude: circularRegion.center.latitude];
+    }
+    
+    UILocalNotification *locationNotification = [[UILocalNotification alloc] init];
+    locationNotification.fireDate = nil;
+    locationNotification.repeatInterval = 0;
+    
+    NSString *notificationAlertTitle = [NSString stringWithFormat:@"Geofence Alert: %@ !", nil != geoFence ? geoFence.identifier :  @"Unknown"];
+    NSString *notificationAlertBody = [NSString stringWithFormat:@"You entered: %@", nil != geoFence ? [NSString stringWithFormat:@"%@, %@", geoFence.title, geoFence.subtitle] : @"Unknown"];
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.2")) {
+        locationNotification.alertTitle = notificationAlertTitle;
+    }
+    
+    locationNotification.alertBody = notificationAlertBody;
+    [[UIApplication sharedApplication] scheduleLocalNotification:locationNotification];
+    
+    [self setStatusLabelText:@"Entered"];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
+    
+    GeoFence *geoFence;
+    
+    if ([region isKindOfClass:[CLCircularRegion class]]) {
+        
+        CLCircularRegion *circularRegion = (CLCircularRegion *)region;
+        
+        NSLog(@"Did exit circularRegion.center.latitude: %f, circularRegion.center.longitude: %f", circularRegion.center.latitude, circularRegion.center.longitude);
+        
+        geoFence = [self findFirstGeoFenceWithLatitude:circularRegion.center.latitude andLongitude: circularRegion.center.latitude];
+    }
+    
+    UILocalNotification *locationNotification = [[UILocalNotification alloc] init];
+    locationNotification.fireDate = nil;
+    locationNotification.repeatInterval = 0;
+    
+    NSString *notificationAlertTitle = [NSString stringWithFormat:@"Geofence Alert: %@ !", nil != geoFence ? geoFence.identifier :  @"Unknown"];
+    NSString *notificationAlertBody = [NSString stringWithFormat:@"You left: %@", nil != geoFence ? [NSString stringWithFormat:@"%@, %@", geoFence.title, geoFence.subtitle] : @"Unknown"];
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.2")) {
+        locationNotification.alertTitle = notificationAlertTitle;
+    }
+    
+    locationNotification.alertBody = [NSString stringWithFormat:notificationAlertBody];
+    [[UIApplication sharedApplication] scheduleLocalNotification:locationNotification];
+    [self setStatusLabelText:@"Exited"];
+}
+
 
 @end

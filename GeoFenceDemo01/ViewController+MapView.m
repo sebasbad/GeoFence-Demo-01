@@ -43,7 +43,18 @@
     objc_setAssociatedObject(self, @selector(mapIsMoving), numberMapIsMoving, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-#pragma mark - mapview callbacks
+# pragma mark - mapview helper methods
+
+- (void)mapView:(MKMapView *)mapView zoomInWithWidth:(NSInteger)latitudinalMeters andHeight:(NSInteger)longitudinalMeters {
+    // Zoom the map very close
+    CLLocationCoordinate2D noLocation;
+    // 500 by 500 meters view region
+    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(noLocation, latitudinalMeters, longitudinalMeters);
+    MKCoordinateRegion adjustedRegion = [mapView regionThatFits:viewRegion];
+    [mapView setRegion:adjustedRegion animated:YES];
+}
+
+# pragma mark - mapview callbacks
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
     

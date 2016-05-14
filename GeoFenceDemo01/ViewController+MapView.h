@@ -18,4 +18,6 @@
 
 @property (nonatomic, assign) BOOL mapIsMoving;
 
+- (void)mapView:(MKMapView *)mapView zoomInWithWidth:(NSInteger)latitudinalMeters andHeight:(NSInteger)longitudinalMeters;
+
 @end

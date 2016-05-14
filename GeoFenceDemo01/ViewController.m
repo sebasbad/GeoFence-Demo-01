@@ -9,10 +9,11 @@
 #import "MapKit/MapKit.h"
 #import "ViewController.h"
 #import "GeoFence+UserDefaults.h"
+#import "ViewController+MapView.h"
 #import "SystemVersionVerificationHelper.h"
 #import "GeoFence.h"
 
-@interface ViewController () <MKMapViewDelegate, CLLocationManagerDelegate>
+@interface ViewController () <CLLocationManagerDelegate>
 
 @property (weak, nonatomic) IBOutlet UISwitch *activateSwitch;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *statusCheckBarButton;
@@ -23,11 +24,6 @@
 @property (strong, nonatomic) CLLocationManager *locationManager;
 
 @property (strong, nonatomic) MKPointAnnotation *currentAnnotation;
-
-@property (strong, nonatomic) NSMutableDictionary<NSString *, CLCircularRegion *> *circularGeoRegions;
-@property (strong, nonatomic) NSMutableDictionary<NSString *, GeoFence *> *geoFences;
-
-@property (nonatomic, assign) BOOL mapIsMoving;
 
 @property (strong, nonatomic) IBOutlet UILongPressGestureRecognizer *longPressGestureRecognizer;
 
@@ -311,83 +307,6 @@
     return foundGeoFence;
 }
 
-# pragma mark - geo fence removal methods
-
-- (void)deleteGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude fromMapView:(MKMapView *)mapView {
-    
-    // Delete "first" geo fence with the given center latitude and longitude
-    
-    for (id item in [self.geoFences allKeys]) {
-        NSString *geoFenceKey = (NSString *)item;
-        GeoFence *geoFence = (GeoFence *)self.geoFences[geoFenceKey];
-        
-        if (latitude == geoFence.centerLatitude && longitude == geoFence.centerLongitude) {
-        
-            [self deleteRegionWithLatitude:latitude andLongitude:longitude];
-            [ViewController mapView:mapView removeOverlayWithLatitude:latitude andLongitude:longitude];
-            [ViewController mapView:mapView removeAnnotationWithLatitude:latitude andLongitude:longitude];
-            
-            NSLog(@"Deleting geo fence with center latitude: %f, longitude: %f", geoFence.centerLatitude, geoFence.centerLongitude);
-            
-            [self.geoFences removeObjectForKey:geoFenceKey];
-            break;
-        }
-    }
-}
-
-- (void)deleteRegionWithLatitude:(double)latitude andLongitude:(double)longitude {
-    
-    // Delete "first" circular region with the given center latitude and longitude
-    
-    for (id item in [self.circularGeoRegions allKeys]) {
-        NSString *circularRegionKey = (NSString *)item;
-        CLCircularRegion *circularRegion = (CLCircularRegion *)self.circularGeoRegions[circularRegionKey];
-        
-        if (latitude == circularRegion.center.latitude && longitude == circularRegion.center.longitude) {
-            
-            NSLog(@"Deleting circular region with key: %@ center.latitude: %f, center.longitude: %f", circularRegionKey, circularRegion.center.latitude, circularRegion.center.longitude);
-            
-            [self.locationManager stopMonitoringForRegion:circularRegion];
-            [self.circularGeoRegions removeObjectForKey:circularRegionKey];
-            break;
-        }
-    }
-}
-
-+ (void)mapView:(MKMapView *)mapView removeOverlayWithLatitude:(double)latitude andLongitude:(double)longitude {
-    
-    // Remove first map overlay with the given center latitude and longitude
-    
-    for (id<MKOverlay> item in [mapView overlays]) {
-        id<MKOverlay> overlay = (id<MKOverlay>)item;
-        
-        if (latitude == overlay.coordinate.latitude && longitude == overlay.coordinate.longitude) {
-            
-            NSLog(@"Removing map view overlay with coordinate.latitude: %f, coordinate.longitude: %f", overlay.coordinate.latitude, overlay.coordinate.longitude);
-            
-            [mapView removeOverlay:overlay];
-            break;
-        }
-    }
-}
-
-+ (void)mapView:(MKMapView *)mapView removeAnnotationWithLatitude:(double)latitude andLongitude:(double)longitude {
-    
-    // Remove first map pin annotation with the given center latitude and longitude
-    
-    for (id<MKAnnotation> item in [mapView annotations]) {
-        id<MKAnnotation> annotation = (id<MKAnnotation>)item;
-        
-        if (latitude == annotation.coordinate.latitude && longitude == annotation.coordinate.longitude) {
-            
-            NSLog(@"Removing annotation annotation with coordinate.latitude: %f, coordinate.longitude: %f", annotation.coordinate.latitude, annotation.coordinate.longitude);
-            
-            [mapView removeAnnotation:annotation];
-            break;
-        }
-    }
-}
-
 #pragma mark - mapview annotation callback
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
@@ -425,40 +344,6 @@
     customPinView.rightCalloutAccessoryView = moreInfoButton;
     
     return customPinView;
-}
-
-#pragma mark - mapview callbacks
-
-- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
-    
-    double annotationLatitude = view.annotation.coordinate.latitude;
-    double annotationLongitude = view.annotation.coordinate.longitude;
-    
-    NSLog(@"annotationLatitude: %f, annotationLongitude: %f", annotationLatitude, annotationLongitude);
-    NSLog(@"%@",view.annotation.title);
-    NSLog(@"%@",view.annotation.subtitle);
-    NSLog(@"%@", control);
-    
-    if (1 == control.tag) {
-        
-        [self deleteGeoFenceWithLatitude:annotationLatitude andLongitude:annotationLongitude fromMapView:mapView];
-    }
-}
-
-- (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated {
-    self.mapIsMoving = YES;
-}
-
-- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
-    self.mapIsMoving = NO;
-}
-
-- (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay {
-    MKCircleRenderer *circleRenderer = [[MKCircleRenderer alloc] initWithOverlay:overlay];
-    circleRenderer.strokeColor = [UIColor redColor];
-    circleRenderer.fillColor = [UIColor colorWithRed:1.0 green:0 blue:0 alpha:0.2];
-    circleRenderer.lineWidth = 1.0;
-    return circleRenderer;
 }
 
 #pragma mark - long press gesture recognizer

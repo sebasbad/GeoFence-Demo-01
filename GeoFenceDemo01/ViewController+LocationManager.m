@@ -22,6 +22,8 @@
     objc_setAssociatedObject(self, @selector(locationManager), locationManager, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+# pragma mark - location manager helper methods
+
 - (void)configureLocationManager {
     // Set up the location manager
     self.locationManager = [[CLLocationManager alloc] init];
@@ -35,6 +37,38 @@
     
     // minimum increment of distance in meters, to be notified that location has changed
     self.locationManager.distanceFilter = 3;
+}
+
+# pragma mark - location manager authorization methods and callbacks
+
+- (void)configureGeoLocationAuthorization {
+    // Check if the device can do geofences
+    if ([CLLocationManager isMonitoringAvailableForClass:[CLCircularRegion class]]) {
+        
+        CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
+        if (kCLAuthorizationStatusAuthorizedWhenInUse == authorizationStatus || kCLAuthorizationStatusAuthorizedAlways == authorizationStatus) {
+            [self enableActivateSwitch];
+        }
+        else {
+            // If not authorized, try and get it authorized
+            [self.locationManager requestAlwaysAuthorization];
+        }
+        
+        // Ask for notifications permissions if the app is in the background
+        UIUserNotificationType types = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert;
+        UIUserNotificationSettings *mySettings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
+        [[UIApplication sharedApplication] registerUserNotificationSettings:mySettings];
+    } else {
+        [self setStatusLabelText:@"GeoRegions not supported"];
+    }
+}
+
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+    
+    CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
+    if (kCLAuthorizationStatusAuthorizedWhenInUse == authorizationStatus || kCLAuthorizationStatusAuthorizedAlways == authorizationStatus) {
+        [self enableActivateSwitch];
+    }
 }
 
 @end

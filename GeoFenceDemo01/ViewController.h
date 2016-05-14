@@ -10,6 +10,9 @@
 
 @interface ViewController : UIViewController
 
+- (void)enableActivateSwitch;
+- (void)setStatusLabelText:(NSString *)text;
+
 
 @end
 

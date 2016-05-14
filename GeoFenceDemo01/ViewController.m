@@ -73,26 +73,12 @@
     self.statusCheckBarButton.enabled = NO;
 }
 
-- (void)configureGeoLocationAuthorization {
-    // Check if the device can do geofences
-    if ([CLLocationManager isMonitoringAvailableForClass:[CLCircularRegion class]]) {
-        
-        CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
-        if (kCLAuthorizationStatusAuthorizedWhenInUse == authorizationStatus || kCLAuthorizationStatusAuthorizedAlways == authorizationStatus) {
-            self.activateSwitch.enabled = YES;
-        }
-        else {
-            // If not authorized, try and get it authorized
-            [self.locationManager requestAlwaysAuthorization];
-        }
-        
-        // Ask for notifications permissions if the app is in the background
-        UIUserNotificationType types = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert;
-        UIUserNotificationSettings *mySettings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
-        [[UIApplication sharedApplication] registerUserNotificationSettings:mySettings];
-    } else {
-        self.statusLabel.text = @"GeoRegions not supported";
-    }
+- (void)enableActivateSwitch {
+    self.activateSwitch.enabled = YES;
+}
+
+- (void)setStatusLabelText:(NSString *)text {
+    self.statusLabel.text = text;
 }
 
 - (void)drawGeoFencesOnMap {
@@ -100,14 +86,6 @@
         GeoFence *geoFence = (GeoFence *)item;
         
         [self drawGeoFence:geoFence onMapView:self.mapView];
-    }
-}
-
-- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
-    
-    CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
-    if (kCLAuthorizationStatusAuthorizedWhenInUse == authorizationStatus || kCLAuthorizationStatusAuthorizedAlways == authorizationStatus) {
-        self.activateSwitch.enabled = YES;
     }
 }
 

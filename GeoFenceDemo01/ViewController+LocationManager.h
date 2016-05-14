@@ -14,5 +14,6 @@
 @property (strong, nonatomic) CLLocationManager *locationManager;
 
 - (void)configureLocationManager;
+- (void)configureGeoLocationAuthorization;
 
 @end

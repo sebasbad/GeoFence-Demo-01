@@ -139,6 +139,7 @@
     NSString *alertTitle = @"New Geo Fence";
     NSString *alertMessage = @"Fill in the Geo Fence data";
     
+    // http://useyourloaf.com/blog/uialertcontroller-changes-in-ios-8/
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:alertTitle message:alertMessage preferredStyle:UIAlertControllerStyleAlert];
     
     [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {

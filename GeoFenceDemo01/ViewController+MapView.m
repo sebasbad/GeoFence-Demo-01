@@ -11,6 +11,9 @@
 
 @implementation ViewController (MapView)
 
+// http://nshipster.com/associated-objects/
+// http://blog.carbonfive.com/2012/11/27/monkey-patching-ios-with-objective-c-categories-part-ii-adding-instance-properties/
+
 @dynamic circularGeoRegions;
 @dynamic geoFences;
 @dynamic mapIsMoving;

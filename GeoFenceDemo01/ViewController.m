@@ -108,12 +108,17 @@
     NSString *alertTitle = @"New Geo Fence";
     NSString *alertMessage = @"Fill in the Geo Fence data";
     
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyyMMddHHmmss"];
+    NSDate *date = [NSDate date];
+    NSString *formattedDateString = [dateFormatter stringFromDate:date];
+    
     // http://useyourloaf.com/blog/uialertcontroller-changes-in-ios-8/
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:alertTitle message:alertMessage preferredStyle:UIAlertControllerStyleAlert];
     
     [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
         textField.placeholder = NSLocalizedString(@"IdentifierPlaceholder", @"Identifier");
-        textField.text = @"MyRegionIdentifier";
+        textField.text = [NSString stringWithFormat:@"GeoFenceId:%@:%f,%f", formattedDateString, latitude ,longitude];
     }];
     
     [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {

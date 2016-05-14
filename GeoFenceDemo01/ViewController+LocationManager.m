@@ -123,7 +123,7 @@
     self.currentLocationAnnotation.coordinate = locations.lastObject.coordinate;
     
     if (!self.mapIsMoving) {
-        [self centerMap:self.currentLocationAnnotation];
+        [self centerMapView:self.currentLocationAnnotation];
     }
 }
 

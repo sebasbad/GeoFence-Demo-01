@@ -9,8 +9,10 @@
 #import "MapKit/MapKit.h"
 #import "ViewController.h"
 
-@interface ViewController (LocationManager)
+@interface ViewController (LocationManager) <CLLocationManagerDelegate>
 
 @property (strong, nonatomic) CLLocationManager *locationManager;
+
+- (void)configureLocationManager;
 
 @end

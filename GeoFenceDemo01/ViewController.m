@@ -14,7 +14,7 @@
 #import "SystemVersionVerificationHelper.h"
 #import "GeoFence.h"
 
-@interface ViewController () <CLLocationManagerDelegate>
+@interface ViewController ()
 
 @property (weak, nonatomic) IBOutlet UISwitch *activateSwitch;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *statusCheckBarButton;
@@ -65,21 +65,6 @@
         
         [self.circularGeoRegions setObject:circularRegion forKey:geoFence.identifier];
     }
-}
-
-- (void)configureLocationManager {
-    // Set up the location manager
-    self.locationManager = [[CLLocationManager alloc] init];
-    self.locationManager.delegate = self;
-   
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
-        self.locationManager.allowsBackgroundLocationUpdates = YES;
-    }
-    self.locationManager.pausesLocationUpdatesAutomatically= YES;
-    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    
-    // minimum increment of distance in meters, to be notified that location has changed
-    self.locationManager.distanceFilter = 3;
 }
 
 - (void)configureUI {

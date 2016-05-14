@@ -19,11 +19,13 @@
 @property (nonatomic, assign) BOOL mapIsMoving;
 
 - (void)mapView:(MKMapView *)mapView zoomInWithWidth:(NSInteger)latitudinalMeters andHeight:(NSInteger)longitudinalMeters;
+
+- (void)centerMapView:(MKMapView *)mapView atCenterPoint:(MKPointAnnotation *)centerPoint;
+
 - (void)drawGeoFencesOnMapView:mapView;
 - (void)drawGeoFence:(GeoFence *)geoFence onMapView:(MKMapView *)mapView;
 
 - (GeoFence *)findFirstGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude;
 
-- (void)centerMapView:(MKMapView *)mapView atCenterPoint:(MKPointAnnotation *)centerPoint;
 
 @end

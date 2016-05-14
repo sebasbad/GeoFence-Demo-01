@@ -81,6 +81,20 @@
     [self locationManager:self.locationManager requestStateForRegions:self.circularGeoRegions];
 }
 
+#pragma mark - long press gesture recognizer
+
+- (IBAction)handleLongPress:(UIGestureRecognizer *)gestureRecognizer {
+    
+    if (gestureRecognizer.state != UIGestureRecognizerStateBegan) {
+        return;
+    }
+    
+    CGPoint touchPoint = [gestureRecognizer locationInView:self.mapView];
+    CLLocationCoordinate2D touchMapCoordinate = [self.mapView convertPoint:touchPoint toCoordinateFromView:self.mapView];
+    
+    [self createCustomGeoFenceWithLatitude:touchMapCoordinate.latitude andLongitude:touchMapCoordinate.longitude];
+}
+
 # pragma mark - map view category methods proxy
 
 - (void)centerMapView:(MKPointAnnotation *)centerPoint {
@@ -147,20 +161,6 @@
     [alertController addAction:okAction];
     
     [self presentViewController:alertController animated:YES completion:nil];
-}
-
-#pragma mark - long press gesture recognizer
-
-- (IBAction)handleLongPress:(UIGestureRecognizer *)gestureRecognizer {
-    
-    if (gestureRecognizer.state != UIGestureRecognizerStateBegan) {
-        return;
-    }
-    
-    CGPoint touchPoint = [gestureRecognizer locationInView:self.mapView];
-    CLLocationCoordinate2D touchMapCoordinate = [self.mapView convertPoint:touchPoint toCoordinateFromView:self.mapView];
-    
-    [self createCustomGeoFenceWithLatitude:touchMapCoordinate.latitude andLongitude:touchMapCoordinate.longitude];
 }
 
 @end

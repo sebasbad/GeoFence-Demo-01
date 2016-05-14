@@ -216,45 +216,6 @@
     return foundGeoFence;
 }
 
-#pragma mark - mapview annotation callback
-
-- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
-    
-    // If the annotation is the user location, just return nil.
-    if ([annotation isKindOfClass:[MKUserLocation class]])
-        return nil;
-    
-    // Try to dequeue an existing pin view first.
-    MKPinAnnotationView* pinView = (MKPinAnnotationView*)[mapView dequeueReusableAnnotationViewWithIdentifier:@"CustomPinAnnotationView"];
-    
-    if (pinView) {
-        pinView.annotation = annotation;
-        return pinView;
-    }
-    
-    // If no pin view already exists, create a new one.
-    MKPinAnnotationView *customPinView = [[MKPinAnnotationView alloc]
-                                          initWithAnnotation:annotation reuseIdentifier:@"CustomPinAnnotationView"];
-    customPinView.pinColor = MKPinAnnotationColorGreen;
-    customPinView.animatesDrop = YES;
-    customPinView.canShowCallout = YES;
-    
-    // Because this is an iOS app, add the detail disclosure button to display details about the annotation in another view.
-    UIImage *trashBinImage = [UIImage imageNamed:@"trash_bin"];
-    UIButton *deleteButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-    [deleteButton setImage:trashBinImage forState:UIControlStateNormal];
-    [deleteButton addTarget:nil action:nil forControlEvents:UIControlEventTouchUpInside];
-    deleteButton.tag = 1;
-    customPinView.leftCalloutAccessoryView = deleteButton;
-    
-    UIButton *moreInfoButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-    [moreInfoButton addTarget:nil action:nil forControlEvents:UIControlEventTouchUpInside];
-    moreInfoButton.tag = 2;
-    customPinView.rightCalloutAccessoryView = moreInfoButton;
-    
-    return customPinView;
-}
-
 #pragma mark - long press gesture recognizer
 
 - (IBAction)handleLongPress:(UIGestureRecognizer *)gestureRecognizer {

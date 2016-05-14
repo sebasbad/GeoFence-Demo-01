@@ -13,6 +13,9 @@
 
 @implementation ViewController (LocationManager)
 
+@dynamic locationManager;
+@dynamic currentLocationAnnotation;
+
 # pragma mark - category properties getters and setters
 
 - (CLLocationManager *) locationManager {

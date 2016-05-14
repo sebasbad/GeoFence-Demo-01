@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		4115088A1CDA5ACE00C66B43 /* GeoFence.m in Sources */ = {isa = PBXBuildFile; fileRef = 411508891CDA5ACE00C66B43 /* GeoFence.m */; };
 		4130E8721CB77CF900A64E15 /* example_gpx.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 4130E8711CB77CF900A64E15 /* example_gpx.gpx */; };
+		419DBAAC1CE664EC00553068 /* GeoFence+UserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 419DBAAB1CE664EC00553068 /* GeoFence+UserDefaults.m */; };
+		419DBAAF1CE6686300553068 /* ViewController+MapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 419DBAAE1CE6686300553068 /* ViewController+MapView.m */; };
+		419DBAB21CE6751F00553068 /* ViewController+LocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 419DBAB11CE6751F00553068 /* ViewController+LocationManager.m */; };
 		41AEEE711CC4A716001E377C /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41AEEE6F1CC4A716001E377C /* Fabric.framework */; };
 		41AEEE721CC4A716001E377C /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41AEEE701CC4A716001E377C /* Crashlytics.framework */; };
 		41EAB8321CB43636004EAF39 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 41EAB8311CB43636004EAF39 /* main.m */; };
@@ -25,6 +28,12 @@
 		411508891CDA5ACE00C66B43 /* GeoFence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeoFence.m; sourceTree = "<group>"; };
 		4130E8711CB77CF900A64E15 /* example_gpx.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = example_gpx.gpx; path = resources/example_gpx.gpx; sourceTree = "<group>"; };
 		415D4A131CDC6068007529EB /* SystemVersionVerificationHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SystemVersionVerificationHelper.h; sourceTree = "<group>"; };
+		419DBAAA1CE664EC00553068 /* GeoFence+UserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GeoFence+UserDefaults.h"; sourceTree = "<group>"; };
+		419DBAAB1CE664EC00553068 /* GeoFence+UserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GeoFence+UserDefaults.m"; sourceTree = "<group>"; };
+		419DBAAD1CE6686300553068 /* ViewController+MapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ViewController+MapView.h"; sourceTree = "<group>"; };
+		419DBAAE1CE6686300553068 /* ViewController+MapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ViewController+MapView.m"; sourceTree = "<group>"; };
+		419DBAB01CE6751F00553068 /* ViewController+LocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ViewController+LocationManager.h"; sourceTree = "<group>"; };
+		419DBAB11CE6751F00553068 /* ViewController+LocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ViewController+LocationManager.m"; sourceTree = "<group>"; };
 		41AEEE6F1CC4A716001E377C /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		41AEEE701CC4A716001E377C /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		41EAB82D1CB43636004EAF39 /* GeoFenceDemo01.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GeoFenceDemo01.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -81,8 +90,14 @@
 				41EAB8341CB43636004EAF39 /* AppDelegate.m */,
 				411508881CDA5ACE00C66B43 /* GeoFence.h */,
 				411508891CDA5ACE00C66B43 /* GeoFence.m */,
+				419DBAAA1CE664EC00553068 /* GeoFence+UserDefaults.h */,
+				419DBAAB1CE664EC00553068 /* GeoFence+UserDefaults.m */,
 				41EAB8361CB43636004EAF39 /* ViewController.h */,
 				41EAB8371CB43636004EAF39 /* ViewController.m */,
+				419DBAB01CE6751F00553068 /* ViewController+LocationManager.h */,
+				419DBAB11CE6751F00553068 /* ViewController+LocationManager.m */,
+				419DBAAD1CE6686300553068 /* ViewController+MapView.h */,
+				419DBAAE1CE6686300553068 /* ViewController+MapView.m */,
 				41EAB8391CB43636004EAF39 /* Main.storyboard */,
 				41EAB83C1CB43636004EAF39 /* Assets.xcassets */,
 				41EAB83E1CB43636004EAF39 /* LaunchScreen.storyboard */,
@@ -190,7 +205,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				419DBAAF1CE6686300553068 /* ViewController+MapView.m in Sources */,
 				41EAB8381CB43636004EAF39 /* ViewController.m in Sources */,
+				419DBAB21CE6751F00553068 /* ViewController+LocationManager.m in Sources */,
+				419DBAAC1CE664EC00553068 /* GeoFence+UserDefaults.m in Sources */,
 				4115088A1CDA5ACE00C66B43 /* GeoFence.m in Sources */,
 				41EAB8351CB43636004EAF39 /* AppDelegate.m in Sources */,
 				41EAB8321CB43636004EAF39 /* main.m in Sources */,

@@ -22,4 +22,6 @@
 - (void)drawGeoFencesOnMapView:mapView;
 - (void)drawGeoFence:(GeoFence *)geoFence onMapView:(MKMapView *)mapView;
 
+- (void)centerMapView:(MKMapView *)mapView atCenterPoint:(MKPointAnnotation *)centerPoint;
+
 @end

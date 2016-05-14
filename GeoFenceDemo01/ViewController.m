@@ -120,9 +120,10 @@
     [self locationManager:self.locationManager requestStateForRegions:self.circularGeoRegions];
 }
 
+# pragma mark - map view category methods proxy
 
-- (void)centerMap:(MKPointAnnotation *)centerPoint {
-    [self.mapView setCenterCoordinate:centerPoint.coordinate animated:YES];
+- (void)centerMapView:(MKPointAnnotation *)centerPoint {
+    [self centerMapView:self.mapView atCenterPoint:centerPoint];
 }
 
 # pragma mark - geo fence creation and management methods

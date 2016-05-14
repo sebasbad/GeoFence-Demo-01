@@ -77,6 +77,10 @@
     [mapView addOverlay:circle];
 }
 
+- (void)centerMapView:(MKMapView *)mapView atCenterPoint:(MKPointAnnotation *)centerPoint {
+    [mapView setCenterCoordinate:centerPoint.coordinate animated:YES];
+}
+
 # pragma mark - mapview callbacks
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {

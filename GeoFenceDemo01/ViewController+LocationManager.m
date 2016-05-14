@@ -30,6 +30,14 @@
     objc_setAssociatedObject(self, @selector(currentLocationAnnotation), currentLocationAnnotation, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+# pragma mark - current location annotation
+
+- (void)addCurrentLocationAnnotation {
+    self.currentLocationAnnotation = [[MKPointAnnotation alloc] init];
+    self.currentLocationAnnotation.coordinate = CLLocationCoordinate2DMake(0.0, 0.0);
+    self.currentLocationAnnotation.title = @"My Location";
+}
+
 # pragma mark - location manager helper methods
 
 - (void)configureLocationManager {

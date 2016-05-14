@@ -42,7 +42,7 @@
     [self mapView:self.mapView zoomInWithWidth:500 andHeight:500];
     
     // Create an annotation for the user's location
-    [self addCurrentAnnotation];
+    [self addCurrentLocationAnnotation];
     
     [self configureGeoLocationAuthorization];
     
@@ -120,11 +120,6 @@
     [self locationManager:self.locationManager requestStateForRegions:self.circularGeoRegions];
 }
 
-- (void)addCurrentAnnotation {
-    self.currentAnnotation = [[MKPointAnnotation alloc] init];
-    self.currentAnnotation.coordinate = CLLocationCoordinate2DMake(0.0, 0.0);
-    self.currentAnnotation.title = @"My Location";
-}
 
 - (void)centerMap:(MKPointAnnotation *)centerPoint {
     [self.mapView setCenterCoordinate:centerPoint.coordinate animated:YES];

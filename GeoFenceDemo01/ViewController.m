@@ -31,21 +31,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self loadCircularRegions];
-    
+    self.mapIsMoving = NO;
     [self configureUI];
     
-    self.mapIsMoving = NO;
-    
     [self configureLocationManager];
-    
     [self mapView:self.mapView zoomInWithWidth:500 andHeight:500];
+    
+    [self configureGeoLocationAuthorization];
     
     // Create an annotation for the user's location
     [self addCurrentLocationAnnotation];
     
-    [self configureGeoLocationAuthorization];
-    
+    [self loadCircularRegions];
     [self drawGeoFencesOnMapView:self.mapView];
 }
 

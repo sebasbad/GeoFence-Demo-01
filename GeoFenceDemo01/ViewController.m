@@ -118,30 +118,6 @@
     return geoFence;
 }
 
-- (void)locationManager:(CLLocationManager *)manager stopMonitoringForRegions:(NSDictionary<NSString *,CLCircularRegion *> *)circularGeoRegions {
-    
-    for (id item in [circularGeoRegions allValues]) {
-        CLCircularRegion *circularRegion = (CLCircularRegion *)item;
-        [manager stopMonitoringForRegion:circularRegion];
-    }
-}
-
-- (void)locationManager:(CLLocationManager *)manager startMonitoringForRegions:(NSDictionary<NSString *,CLCircularRegion *> *)circularGeoRegions {
-    
-    for (id item in [circularGeoRegions allValues]) {
-        CLCircularRegion *circularRegion = (CLCircularRegion *)item;
-        [manager startMonitoringForRegion:circularRegion];
-    }
-}
-
-- (void)locationManager:(CLLocationManager *)manager requestStateForRegions:(NSDictionary<NSString *,CLCircularRegion *> *)circularGeoRegions {
-    
-    for (id item in [circularGeoRegions allValues]) {
-        CLCircularRegion *circularRegion = (CLCircularRegion *)item;
-        [manager requestStateForRegion:circularRegion];
-    }
-}
-
 - (IBAction)statusCheckTapped:(id)sender {
     [self locationManager:self.locationManager requestStateForRegions:self.circularGeoRegions];
 }

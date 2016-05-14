@@ -39,6 +39,32 @@
     self.locationManager.distanceFilter = 3;
 }
 
+- (void)locationManager:(CLLocationManager *)manager requestStateForRegions:(NSDictionary<NSString *,CLCircularRegion *> *)circularGeoRegions {
+    
+    for (id item in [circularGeoRegions allValues]) {
+        CLCircularRegion *circularRegion = (CLCircularRegion *)item;
+        [manager requestStateForRegion:circularRegion];
+    }
+}
+
+# pragma mark - location manager monitoring helper methods
+
+- (void)locationManager:(CLLocationManager *)manager stopMonitoringForRegions:(NSDictionary<NSString *,CLCircularRegion *> *)circularGeoRegions {
+    
+    for (id item in [circularGeoRegions allValues]) {
+        CLCircularRegion *circularRegion = (CLCircularRegion *)item;
+        [manager stopMonitoringForRegion:circularRegion];
+    }
+}
+
+- (void)locationManager:(CLLocationManager *)manager startMonitoringForRegions:(NSDictionary<NSString *,CLCircularRegion *> *)circularGeoRegions {
+    
+    for (id item in [circularGeoRegions allValues]) {
+        CLCircularRegion *circularRegion = (CLCircularRegion *)item;
+        [manager startMonitoringForRegion:circularRegion];
+    }
+}
+
 # pragma mark - location manager authorization methods and callbacks
 
 - (void)configureGeoLocationAuthorization {

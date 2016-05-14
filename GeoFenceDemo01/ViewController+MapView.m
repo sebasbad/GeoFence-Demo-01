@@ -36,6 +36,8 @@
     objc_setAssociatedObject(self, @selector(geoFences), geoFences, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+// http://stackoverflow.com/questions/9776811/how-to-add-bool-property-to-a-category
+
 - (BOOL) mapIsMoving {
     NSNumber *numberMapIsMoving = objc_getAssociatedObject(self, @selector(mapIsMoving));
     return [numberMapIsMoving boolValue];

@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
+#import "Geocoder.h"
 
 @interface AppDelegate ()
 
@@ -21,6 +22,8 @@
     // Override point for customization after application launch.
     
     [Fabric with:@[[Crashlytics class]]];
+    
+    [[Geocoder sharedInstance] takeOff];
     
     return YES;
 }

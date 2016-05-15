@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GeocoderDelegate.h"
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <GeocoderDelegate>
 
 - (void)enableActivateSwitch;
 - (void)setStatusLabelText:(NSString *)text;

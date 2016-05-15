@@ -7,7 +7,6 @@
 //
 
 #import "MapKit/MapKit.h"
-#import "ReverseGeocoderDelegate.h"
 #import "ReverseGeocoder.h"
 
 @interface ReverseGeocoder ()
@@ -37,15 +36,6 @@
 
 - (void)takeOff {
     self.geocoder = [[CLGeocoder alloc] init];
-}
-
-- (void)startReverseGeocodeWithLatitude:(double)latitude andLongitude:(double)longitude andDelegate:(id<ReverseGeocoderDelegate>)delegate {
-    
-    CLLocation *location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
-    
-    [self.geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
-        [delegate parseGeocoderResultForLocation:location withPlacemarks:placemarks orError:error];
-    }];
 }
 
 - (void)startReverseGeocodeWithLatitude:(double)latitude andLongitude:(double)longitude andCompletion:(void (^)(NSString* title, NSString* subtitle))completion {

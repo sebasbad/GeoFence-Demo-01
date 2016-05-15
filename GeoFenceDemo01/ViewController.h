@@ -7,9 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ReverseGeocoderDelegate.h"
 
-@interface ViewController : UIViewController <ReverseGeocoderDelegate>
+@interface ViewController : UIViewController
 
 - (void)enableActivateSwitch;
 - (void)setStatusLabelText:(NSString *)text;

@@ -37,7 +37,6 @@
 		419DBAB11CE6751F00553068 /* ViewController+LocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ViewController+LocationManager.m"; sourceTree = "<group>"; };
 		419DBAB51CE7BA6D00553068 /* ReverseGeocoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReverseGeocoder.h; sourceTree = "<group>"; };
 		419DBAB61CE7BA6D00553068 /* ReverseGeocoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReverseGeocoder.m; sourceTree = "<group>"; };
-		419DBAB81CE7CD2F00553068 /* ReverseGeocoderDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReverseGeocoderDelegate.h; sourceTree = "<group>"; };
 		41AEEE6F1CC4A716001E377C /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		41AEEE701CC4A716001E377C /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		41EAB82D1CB43636004EAF39 /* GeoFenceDemo01.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GeoFenceDemo01.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -98,7 +97,6 @@
 				419DBAAB1CE664EC00553068 /* GeoFence+UserDefaults.m */,
 				419DBAB51CE7BA6D00553068 /* ReverseGeocoder.h */,
 				419DBAB61CE7BA6D00553068 /* ReverseGeocoder.m */,
-				419DBAB81CE7CD2F00553068 /* ReverseGeocoderDelegate.h */,
 				41EAB8361CB43636004EAF39 /* ViewController.h */,
 				41EAB8371CB43636004EAF39 /* ViewController.m */,
 				419DBAB01CE6751F00553068 /* ViewController+LocationManager.h */,

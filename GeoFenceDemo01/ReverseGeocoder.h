@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ReverseGeocoderDelegate.h"
 
 @interface ReverseGeocoder : NSObject
 
@@ -17,7 +16,6 @@
 
 - (void)takeOff;
 
-- (void)startReverseGeocodeWithLatitude:(double)latitude andLongitude:(double)longitude andDelegate:(id<ReverseGeocoderDelegate>)delegate;
 - (void)startReverseGeocodeWithLatitude:(double)latitude andLongitude:(double)longitude andCompletion:(void (^)(NSString* title, NSString* subtitle))completion;
 
 @end

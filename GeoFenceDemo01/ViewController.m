@@ -175,35 +175,43 @@
         textField.text = [NSString stringWithFormat:@"GeoFenceId:%@:%f,%f", formattedDateString, latitude ,longitude];
     }];
     
-    //ReverseGeocoder *reverseGeocoder = [ReverseGeocoder sharedInstance];
+    void (^createRadiusField)(UIAlertController *alertController) = ^void(UIAlertController *alertController) {
+        [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+            textField.placeholder = NSLocalizedString(@"RadiusPlaceholder", @"Radius in meters");
+            textField.keyboardType = UIKeyboardTypeNumberPad;
+            textField.text = @"3";
+        }];
+    };
+    
+    void (^createSubtitleField)(UIAlertController *alertController) = ^void(UIAlertController *alertController) {
+        
+        __weak typeof(alertController)weakAlertController = alertController;
+        
+        [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+            textField.placeholder = NSLocalizedString(@"SubtitlePlaceholder", @"Subtitle");
+            
+            ReverseGeocoder *reverseGeocoder = [ReverseGeocoder sharedInstance];
+            [reverseGeocoder startReverseGeocodeWithLatitude:latitude andLongitude:longitude andCompletion:^(NSString *title, NSString *subtitle) {
+                textField.text = nil == subtitle ? @"I'm here!!!" : subtitle;
+                
+                createRadiusField(weakAlertController);
+            }];
+            
+        }];
+    };
+    
+    __weak typeof(alertController)weakAlertController = alertController;
     
     [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
         textField.placeholder = NSLocalizedString(@"TitlePlaceholder", @"Title");
         
-        // A new instance of CLGeocoder because the CLGeocoder is not thread safe
-        CLGeocoder *geocoder = [[CLGeocoder alloc] init];
-        ReverseGeocoder *reverseGeocoder = [[ReverseGeocoder alloc] initWithGeocoder:geocoder];
+        ReverseGeocoder *reverseGeocoder = [ReverseGeocoder sharedInstance];
         [reverseGeocoder startReverseGeocodeWithLatitude:latitude andLongitude:longitude andCompletion:^(NSString *title, NSString *subtitle) {
             textField.text = nil == title ? @"Where am I?" : title;
+            
+            createSubtitleField(weakAlertController);
+            
         }];
-    }];
-    
-    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-        textField.placeholder = NSLocalizedString(@"SubtitlePlaceholder", @"Subtitle");
-        
-        // A new instance of CLGeocoder because the CLGeocoder is not thread safe
-        CLGeocoder *geocoder = [[CLGeocoder alloc] init];
-        ReverseGeocoder *reverseGeocoder = [[ReverseGeocoder alloc] initWithGeocoder:geocoder];
-        [reverseGeocoder startReverseGeocodeWithLatitude:latitude andLongitude:longitude andCompletion:^(NSString *title, NSString *subtitle) {
-            textField.text = nil == subtitle ? @"I'm here!!!" : subtitle;
-        }];
-        
-    }];
-    
-    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-        textField.placeholder = NSLocalizedString(@"RadiusPlaceholder", @"Radius in meters");
-        textField.keyboardType = UIKeyboardTypeNumberPad;
-        textField.text = @"3";
     }];
     
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel action") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {

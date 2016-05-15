@@ -106,8 +106,6 @@
 
 - (void)createCustomGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude {
     
-    //[self createCustomGeoFenceWithLatitude:latitude andLongitude:longitude andTitle:nil andSubtitle:nil];
-    
     NSString *alertTitle = @"New Geo Fence";
     NSString *alertMessage = @"Fill in the Geo Fence data";
     

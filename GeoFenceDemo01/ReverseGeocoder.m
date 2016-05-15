@@ -26,74 +26,46 @@
     return sharedInstance;
 }
 
-- (instancetype)initWithGeocoder:(CLGeocoder *)geocoder {
-    self = [super init];
-    if (self) {
-        [self setGeocoder:geocoder];
-    }
-    return self;
-}
-
 - (void)takeOff {
     self.geocoder = [[CLGeocoder alloc] init];
 }
 
 - (void)startReverseGeocodeWithLatitude:(double)latitude andLongitude:(double)longitude andCompletion:(void (^)(NSString* title, NSString* subtitle))completion {
     
-    NSLog(@"1");
-    
     CLLocation *location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
     
-//    @synchronized (self) {
-    
-        [self.geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+    [self.geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+        
+        NSString *title;
+        NSString *subtitle;
+        
+        if (nil == error) {
+            NSString *addressName;
+            NSString *administrativeAreaName;
+            NSString *countryName;
             
-//            @synchronized (self) {
-            
-                NSLog(@"2");
-                
-                NSString *title;
-                NSString *subtitle;
-                
-                if (error) {
-                    
-                    title = @"There was a problem reverse geocoding";
-                    subtitle = [error localizedDescription];
-                    
-                } else {
-                    NSString *addressName;
-                    NSString *administrativeAreaName;
-                    NSString *countryName;
-                    
-                    for (CLPlacemark *placemark in placemarks) {
-                        if (nil != placemark.name) {
-                            addressName = placemark.name;
-                        }
-                        if (nil != placemark.administrativeArea) {
-                            administrativeAreaName = placemark.administrativeArea;
-                        }
-                        if (nil != placemark.country) {
-                            countryName = placemark.country;
-                        }
-                        
-                        break;
-                    }
-                    
-                    title = addressName;
-                    subtitle = nil == administrativeAreaName && nil == countryName ? nil : [NSString stringWithFormat:@"%@, %@", administrativeAreaName, countryName];
+            for (CLPlacemark *placemark in placemarks) {
+                if (nil != placemark.name) {
+                    addressName = placemark.name;
+                }
+                if (nil != placemark.administrativeArea) {
+                    administrativeAreaName = placemark.administrativeArea;
+                }
+                if (nil != placemark.country) {
+                    countryName = placemark.country;
                 }
                 
-                NSLog(@"3");
-                
-                if (completion) {
-                    
-                    NSLog(@"4");
-                    
-                    completion(title, subtitle);
-                }
-//            }
-        }];
-//    }
+                break;
+            }
+            
+            title = addressName;
+            subtitle = nil == administrativeAreaName && nil == countryName ? nil : [NSString stringWithFormat:@"%@, %@", administrativeAreaName, countryName];
+        }
+        
+        if (completion) {
+            completion(title, subtitle);
+        }
+    }];
 }
 
 @end

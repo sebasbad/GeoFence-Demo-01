@@ -12,8 +12,6 @@
 
 + (instancetype)sharedInstance;
 
-- (instancetype)initWithGeocoder:(CLGeocoder *)geocoder;
-
 - (void)takeOff;
 
 - (void)startReverseGeocodeWithLatitude:(double)latitude andLongitude:(double)longitude andCompletion:(void (^)(NSString* title, NSString* subtitle))completion;

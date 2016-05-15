@@ -175,43 +175,28 @@
         textField.text = [NSString stringWithFormat:@"GeoFenceId:%@:%f,%f", formattedDateString, latitude ,longitude];
     }];
     
-    void (^createRadiusField)(UIAlertController *alertController) = ^void(UIAlertController *alertController) {
-        [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-            textField.placeholder = NSLocalizedString(@"RadiusPlaceholder", @"Radius in meters");
-            textField.keyboardType = UIKeyboardTypeNumberPad;
-            textField.text = @"3";
-        }];
-    };
+    __block UITextField *titleTextField;
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        titleTextField = textField;
+        textField.placeholder = NSLocalizedString(@"TitlePlaceholder", @"Title");
+    }];
     
-    void (^createSubtitleField)(UIAlertController *alertController) = ^void(UIAlertController *alertController) {
-        
-        __weak typeof(alertController)weakAlertController = alertController;
-        
-        [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-            textField.placeholder = NSLocalizedString(@"SubtitlePlaceholder", @"Subtitle");
-            
-            ReverseGeocoder *reverseGeocoder = [ReverseGeocoder sharedInstance];
-            [reverseGeocoder startReverseGeocodeWithLatitude:latitude andLongitude:longitude andCompletion:^(NSString *title, NSString *subtitle) {
-                textField.text = nil == subtitle ? @"I'm here!!!" : subtitle;
-                
-                createRadiusField(weakAlertController);
-            }];
-            
-        }];
-    };
+    __block UITextField *subtitleTextField;
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        subtitleTextField = textField;
+        textField.placeholder = NSLocalizedString(@"SubtitlePlaceholder", @"Subtitle");
+    }];
     
-    __weak typeof(alertController)weakAlertController = alertController;
+    ReverseGeocoder *reverseGeocoder = [ReverseGeocoder sharedInstance];
+    [reverseGeocoder startReverseGeocodeWithLatitude:latitude andLongitude:longitude andCompletion:^(NSString *title, NSString *subtitle) {
+        titleTextField.text = nil == title ? @"Where am I?" : title;
+        subtitleTextField.text = nil == subtitle ? @"I'm here!!!" : subtitle;
+    }];
     
     [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-        textField.placeholder = NSLocalizedString(@"TitlePlaceholder", @"Title");
-        
-        ReverseGeocoder *reverseGeocoder = [ReverseGeocoder sharedInstance];
-        [reverseGeocoder startReverseGeocodeWithLatitude:latitude andLongitude:longitude andCompletion:^(NSString *title, NSString *subtitle) {
-            textField.text = nil == title ? @"Where am I?" : title;
-            
-            createSubtitleField(weakAlertController);
-            
-        }];
+        textField.placeholder = NSLocalizedString(@"RadiusPlaceholder", @"Radius in meters");
+        textField.keyboardType = UIKeyboardTypeNumberPad;
+        textField.text = @"3";
     }];
     
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel action") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {

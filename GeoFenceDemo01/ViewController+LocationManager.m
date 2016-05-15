@@ -150,7 +150,7 @@
         
         NSLog(@"Did enter circularRegion.center.latitude: %f, circularRegion.center.longitude: %f", circularRegion.center.latitude, circularRegion.center.longitude);
         
-        geoFence = [self findFirstGeoFenceWithLatitude:circularRegion.center.latitude andLongitude: circularRegion.center.latitude];
+        geoFence = [self findFirstGeoFenceWithLatitude:circularRegion.center.latitude andLongitude: circularRegion.center.longitude];
     }
     
     UILocalNotification *locationNotification = [[UILocalNotification alloc] init];
@@ -180,7 +180,7 @@
         
         NSLog(@"Did exit circularRegion.center.latitude: %f, circularRegion.center.longitude: %f", circularRegion.center.latitude, circularRegion.center.longitude);
         
-        geoFence = [self findFirstGeoFenceWithLatitude:circularRegion.center.latitude andLongitude: circularRegion.center.latitude];
+        geoFence = [self findFirstGeoFenceWithLatitude:circularRegion.center.latitude andLongitude: circularRegion.center.longitude];
     }
     
     UILocalNotification *locationNotification = [[UILocalNotification alloc] init];

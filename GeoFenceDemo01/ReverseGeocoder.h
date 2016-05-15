@@ -1,5 +1,5 @@
 //
-//  Geocoder.h
+//  ReverseGeocoder.h
 //  GeoFenceDemo01
 //
 //  Created by Sebastián Badea on 14/5/16.
@@ -7,14 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GeocoderDelegate.h"
 
-@interface Geocoder : NSObject
+@interface ReverseGeocoder : NSObject
 
 + (instancetype)sharedInstance;
 
 - (void)takeOff;
 
-- (void)startReverseGeocodeWithLatitude:(double)latitude andLongitude:(double)longitude andDelegate:(id<GeocoderDelegate>)delegate;
+- (void)startReverseGeocodeWithLatitude:(double)latitude andLongitude:(double)longitude andCompletion:(void (^)(NSString* title, NSString* subtitle))completion;
 
 @end

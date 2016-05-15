@@ -12,7 +12,7 @@
 #import "ViewController+LocationManager.h"
 #import "ViewController+MapView.h"
 #import "SystemVersionVerificationHelper.h"
-#import "Geocoder.h"
+#import "ReverseGeocoder.h"
 #import "GeoFence.h"
 
 @interface ViewController ()
@@ -45,54 +45,6 @@
     
     [self loadCircularRegions];
     [self drawGeoFencesOnMapView:self.mapView];
-}
-
-# pragma mark - geocoder delegate method
-
-- (void)parseGeocoderResultForLocation:(CLLocation *)location withPlacemarks:(NSArray *)placemarks orError:(NSError *)error {
-    
-    if (error) {
-        
-        NSLog(@"There was a problem reverse geocoding");
-        NSLog([error localizedDescription]);
-        
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"There was a problem reverse geocoding" message:[error localizedDescription] preferredStyle:UIAlertControllerStyleAlert];
-        
-        UIAlertAction *okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", @"Ok action") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            NSLog(@"Ok action");
-            [self createCustomGeoFenceWithLocation:location andPlacemarks:nil];
-        }];
-        
-        [alertController addAction:okAction];
-        
-        [self presentViewController:alertController animated:YES completion:nil];
-    } else {
-        [self createCustomGeoFenceWithLocation:location andPlacemarks:placemarks];
-    }
-}
-
-- (void)createCustomGeoFenceWithLocation:(CLLocation *)location andPlacemarks:(NSArray *)placemarks {
-    NSString *addressName;
-    NSString *administrativeAreaName;
-    NSString *countryName;
-    
-    for (CLPlacemark *placemark in placemarks) {
-        if (nil != placemark.name) {
-            addressName = placemark.name;
-        }
-        if (nil != placemark.administrativeArea) {
-            administrativeAreaName = placemark.administrativeArea;
-        }
-        if (nil != placemark.country) {
-            countryName = placemark.country;
-        }
-        
-        break;
-    }
-    
-    NSString *subtitle = nil == administrativeAreaName && nil == countryName ? nil : [NSString stringWithFormat:@"%@, %@", administrativeAreaName, countryName];
-    
-    [self createCustomGeoFenceWithLatitude:location.coordinate.latitude andLongitude:location.coordinate.longitude andTitle:addressName andSubtitle:subtitle];
 }
 
 # pragma mark - UI methods
@@ -141,8 +93,7 @@
     CGPoint touchPoint = [gestureRecognizer locationInView:self.mapView];
     CLLocationCoordinate2D touchMapCoordinate = [self.mapView convertPoint:touchPoint toCoordinateFromView:self.mapView];
     
-    __weak typeof(self)weakSelf = self;
-    [[Geocoder sharedInstance] startReverseGeocodeWithLatitude:touchMapCoordinate.latitude andLongitude:touchMapCoordinate.longitude andDelegate:weakSelf];
+    [self createCustomGeoFenceWithLatitude:touchMapCoordinate.latitude andLongitude:touchMapCoordinate.longitude];
 }
 
 # pragma mark - map view category methods proxy
@@ -154,10 +105,6 @@
 # pragma mark - geo fence creation and management methods
 
 - (void)createCustomGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude {
-    
-    [self createCustomGeoFenceWithLatitude:latitude andLongitude:longitude andTitle:nil andSubtitle:nil];
-}
-- (void)createCustomGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude andTitle:(NSString *)title andSubtitle:(NSString *)subtitle {
     
     NSString *alertTitle = @"New Geo Fence";
     NSString *alertMessage = @"Fill in the Geo Fence data";
@@ -175,14 +122,22 @@
         textField.text = [NSString stringWithFormat:@"GeoFenceId:%@:%f,%f", formattedDateString, latitude ,longitude];
     }];
     
+    __block UITextField *titleTextField;
     [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        titleTextField = textField;
         textField.placeholder = NSLocalizedString(@"TitlePlaceholder", @"Title");
-        textField.text = nil == title ? @"Where am I?" : title;
     }];
     
+    __block UITextField *subtitleTextField;
     [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        subtitleTextField = textField;
         textField.placeholder = NSLocalizedString(@"SubtitlePlaceholder", @"Subtitle");
-        textField.text = nil == subtitle ? @"I'm here!!!" : subtitle;
+    }];
+    
+    ReverseGeocoder *reverseGeocoder = [ReverseGeocoder sharedInstance];
+    [reverseGeocoder startReverseGeocodeWithLatitude:latitude andLongitude:longitude andCompletion:^(NSString *title, NSString *subtitle) {
+        titleTextField.text = nil == title ? @"Where am I?" : title;
+        subtitleTextField.text = nil == subtitle ? @"I'm here!!!" : subtitle;
     }];
     
     [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {

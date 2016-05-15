@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "MapKit/MapKit.h"
 
-@protocol GeocoderDelegate <NSObject>
+@protocol ReverseGeocoderDelegate <NSObject>
 
 - (void)parseGeocoderResultForLocation:(CLLocation *)location withPlacemarks:(NSArray *)placemarks orError:(NSError *)error;
 

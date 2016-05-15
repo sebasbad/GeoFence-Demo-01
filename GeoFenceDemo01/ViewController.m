@@ -12,7 +12,7 @@
 #import "ViewController+LocationManager.h"
 #import "ViewController+MapView.h"
 #import "SystemVersionVerificationHelper.h"
-#import "Geocoder.h"
+#import "ReverseGeocoder.h"
 #import "GeoFence.h"
 
 @interface ViewController ()

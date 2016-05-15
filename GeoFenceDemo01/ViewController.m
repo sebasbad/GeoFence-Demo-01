@@ -141,8 +141,10 @@
     CGPoint touchPoint = [gestureRecognizer locationInView:self.mapView];
     CLLocationCoordinate2D touchMapCoordinate = [self.mapView convertPoint:touchPoint toCoordinateFromView:self.mapView];
     
-    __weak typeof(self)weakSelf = self;
-    [[Geocoder sharedInstance] startReverseGeocodeWithLatitude:touchMapCoordinate.latitude andLongitude:touchMapCoordinate.longitude andDelegate:weakSelf];
+//    __weak typeof(self)weakSelf = self;
+//    [[ReverseGeocoder sharedInstance] startReverseGeocodeWithLatitude:touchMapCoordinate.latitude andLongitude:touchMapCoordinate.longitude andDelegate:weakSelf];
+    
+    [self createCustomGeoFenceWithLatitude:touchMapCoordinate.latitude andLongitude:touchMapCoordinate.longitude];
 }
 
 # pragma mark - map view category methods proxy
@@ -155,7 +157,84 @@
 
 - (void)createCustomGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude {
     
-    [self createCustomGeoFenceWithLatitude:latitude andLongitude:longitude andTitle:nil andSubtitle:nil];
+    //[self createCustomGeoFenceWithLatitude:latitude andLongitude:longitude andTitle:nil andSubtitle:nil];
+    
+    NSString *alertTitle = @"New Geo Fence";
+    NSString *alertMessage = @"Fill in the Geo Fence data";
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyyMMddHHmmss"];
+    NSDate *date = [NSDate date];
+    NSString *formattedDateString = [dateFormatter stringFromDate:date];
+    
+    // http://useyourloaf.com/blog/uialertcontroller-changes-in-ios-8/
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:alertTitle message:alertMessage preferredStyle:UIAlertControllerStyleAlert];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = NSLocalizedString(@"IdentifierPlaceholder", @"Identifier");
+        textField.text = [NSString stringWithFormat:@"GeoFenceId:%@:%f,%f", formattedDateString, latitude ,longitude];
+    }];
+    
+    //ReverseGeocoder *reverseGeocoder = [ReverseGeocoder sharedInstance];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = NSLocalizedString(@"TitlePlaceholder", @"Title");
+        
+        // A new instance of CLGeocoder because the CLGeocoder is not thread safe
+        CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+        ReverseGeocoder *reverseGeocoder = [[ReverseGeocoder alloc] initWithGeocoder:geocoder];
+        [reverseGeocoder startReverseGeocodeWithLatitude:latitude andLongitude:longitude andCompletion:^(NSString *title, NSString *subtitle) {
+            textField.text = nil == title ? @"Where am I?" : title;
+        }];
+    }];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = NSLocalizedString(@"SubtitlePlaceholder", @"Subtitle");
+        
+        // A new instance of CLGeocoder because the CLGeocoder is not thread safe
+        CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+        ReverseGeocoder *reverseGeocoder = [[ReverseGeocoder alloc] initWithGeocoder:geocoder];
+        [reverseGeocoder startReverseGeocodeWithLatitude:latitude andLongitude:longitude andCompletion:^(NSString *title, NSString *subtitle) {
+            textField.text = nil == subtitle ? @"I'm here!!!" : subtitle;
+        }];
+        
+    }];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = NSLocalizedString(@"RadiusPlaceholder", @"Radius in meters");
+        textField.keyboardType = UIKeyboardTypeNumberPad;
+        textField.text = @"3";
+    }];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel action") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+        NSLog(@"Cancel action");
+    }];
+    
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK action") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        
+        UITextField *identifierTextField = alertController.textFields.firstObject;
+        UITextField *titleTextField = alertController.textFields[1];
+        UITextField *subtitleTextField = alertController.textFields[2];
+        UITextField *radiusTextField = alertController.textFields.lastObject;
+        
+        NSString *identifier = nil == identifierTextField.text ? @"MyRegionIdentifier" : identifierTextField.text;
+        NSString *title = nil == titleTextField.text ? @"MyRegionIdentifier" : titleTextField.text;
+        NSString *subtitle = nil == subtitleTextField.text ? @"I'm here!!!" : subtitleTextField.text;
+        
+        NSNumber *radiusNumber = [[[NSNumberFormatter alloc] init] numberFromString:radiusTextField.text];
+        NSInteger radius = [radiusNumber integerValue];
+        radius = radius <= 0 ? 3 : radius;
+        
+        GeoFence *geoFence = [self createGeoFenceWithLatitude:latitude andLongitude:longitude andRadiusInMeters:radius andIdentifier:identifier andTitle:title andSubtitle:subtitle];
+        
+        [self drawGeoFence:geoFence onMapView:self.mapView];
+        
+    }];
+    
+    [alertController addAction:cancelAction];
+    [alertController addAction:okAction];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 - (void)createCustomGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude andTitle:(NSString *)title andSubtitle:(NSString *)subtitle {
     

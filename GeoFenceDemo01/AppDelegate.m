@@ -23,7 +23,7 @@
     
     [Fabric with:@[[Crashlytics class]]];
     
-    [[Geocoder sharedInstance] takeOff];
+//    [[ReverseGeocoder sharedInstance] takeOff];
     
     return YES;
 }

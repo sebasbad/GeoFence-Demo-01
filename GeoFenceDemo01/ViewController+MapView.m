@@ -140,6 +140,9 @@
     if (1 == control.tag) {
         
         [self deleteGeoFenceWithLatitude:annotationLatitude andLongitude:annotationLongitude andLocationManager:self.locationManager fromMapView:mapView];
+    } else if (2 == control.tag) {
+        
+        [self editCustomGeoFenceWithLatitude:annotationLatitude andLongitude:annotationLongitude];
     }
 }
 
@@ -183,7 +186,9 @@
 
 # pragma mark - geo fence removal methods
 
-- (void)deleteGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude andLocationManager:(CLLocationManager *)locationManager fromMapView:(MKMapView *)mapView {
+- (GeoFence *)deleteGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude andLocationManager:(CLLocationManager *)locationManager fromMapView:(MKMapView *)mapView {
+    
+    GeoFence *firstFoundGeofence;
     
     // Delete "first" geo fence with the given center latitude and longitude
     
@@ -200,9 +205,14 @@
             NSLog(@"Deleting geo fence with center latitude: %f, longitude: %f", geoFence.centerLatitude, geoFence.centerLongitude);
             
             [self.geoFences removeObjectForKey:geoFenceKey];
+            
+            firstFoundGeofence = geoFence;
+            
             break;
         }
     }
+    
+    return firstFoundGeofence;
 }
 
 - (void)deleteRegionWithLatitude:(double)latitude andLongitude:(double)longitude andLocationManager:(CLLocationManager *)locationManager {

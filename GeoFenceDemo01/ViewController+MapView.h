@@ -27,6 +27,8 @@
 
 - (GeoFence *)createGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude andRadiusInMeters:(NSInteger)radius andIdentifier:(NSString *)identifier andTitle:(NSString *)title andSubtitle:(NSString *)subtitle;
 
+- (GeoFence *)deleteGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude andLocationManager:(CLLocationManager *)locationManager fromMapView:(MKMapView *)mapView;
+
 - (GeoFence *)findFirstGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude;
 
 - (void)loadCircularRegions;

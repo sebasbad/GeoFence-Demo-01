@@ -15,5 +15,7 @@
 
 - (void)centerMapView:(MKPointAnnotation *)centerPoint;
 
+- (void)editCustomGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude;
+
 @end
 

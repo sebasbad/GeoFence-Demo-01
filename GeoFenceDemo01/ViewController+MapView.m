@@ -140,6 +140,9 @@
     if (1 == control.tag) {
         
         [self deleteGeoFenceWithLatitude:annotationLatitude andLongitude:annotationLongitude andLocationManager:self.locationManager fromMapView:mapView];
+    } else if (2 == control.tag) {
+        
+        [self editCustomGeoFenceWithLatitude:annotationLatitude andLongitude:annotationLongitude];
     }
 }
 

@@ -177,4 +177,84 @@
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
+- (void)editCustomGeoFenceWithLatitude:(double)latitude andLongitude:(double)longitude {
+    
+    GeoFence *geofence = [self findFirstGeoFenceWithLatitude:latitude andLongitude:longitude];
+    
+    NSString *alertTitle = @"Edit Geo Fence";
+    NSString *alertMessage = @"Edit the Geo Fence data";
+    
+    // http://useyourloaf.com/blog/uialertcontroller-changes-in-ios-8/
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:alertTitle message:alertMessage preferredStyle:UIAlertControllerStyleAlert];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = NSLocalizedString(@"IdentifierPlaceholder", @"Identifier");
+        textField.text = geofence.identifier;
+    }];
+    
+    __block UITextField *titleTextField;
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        titleTextField = textField;
+        textField.placeholder = NSLocalizedString(@"TitlePlaceholder", @"Title");
+        textField.text = geofence.title;
+    }];
+    
+    __block UITextField *subtitleTextField;
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        subtitleTextField = textField;
+        textField.placeholder = NSLocalizedString(@"SubtitlePlaceholder", @"Subtitle");
+        textField.text = geofence.subtitle;
+    }];
+    
+    ReverseGeocoder *reverseGeocoder = [ReverseGeocoder sharedInstance];
+    [reverseGeocoder startReverseGeocodeWithLatitude:latitude andLongitude:longitude andCompletion:^(NSString *title, NSString *subtitle) {
+        titleTextField.text = nil == geofence.title ? title : geofence.title;
+        subtitleTextField.text = nil == geofence.subtitle ? subtitle : geofence.subtitle;
+    }];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = NSLocalizedString(@"RadiusPlaceholder", @"Radius in meters");
+        textField.keyboardType = UIKeyboardTypeNumberPad;
+        textField.text = [NSString stringWithFormat:@"%f", geofence.radius];
+    }];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel action") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+        NSLog(@"Cancel action");
+    }];
+    
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK action") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        
+        UITextField *identifierTextField = alertController.textFields.firstObject;
+        UITextField *titleTextField = alertController.textFields[1];
+        UITextField *subtitleTextField = alertController.textFields[2];
+        UITextField *radiusTextField = alertController.textFields.lastObject;
+        
+        NSString *identifier = nil == identifierTextField.text ? @"MyRegionIdentifier" : identifierTextField.text;
+        NSString *title = nil == titleTextField.text ? @"MyRegionIdentifier" : titleTextField.text;
+        NSString *subtitle = nil == subtitleTextField.text ? @"I'm here!!!" : subtitleTextField.text;
+        
+        NSNumber *radiusNumber = [[[NSNumberFormatter alloc] init] numberFromString:radiusTextField.text];
+        NSInteger radius = [radiusNumber integerValue];
+        radius = radius <= 0 ? 3 : radius;
+        
+        GeoFence *deletedGeofence = [self deleteGeoFenceWithLatitude:latitude andLongitude:longitude andLocationManager:self.locationManager fromMapView:self.mapView];
+        
+        if (nil != deletedGeofence) {
+            
+            GeoFence *geoFence = [self createGeoFenceWithLatitude:latitude andLongitude:longitude andRadiusInMeters:radius andIdentifier:identifier andTitle:title andSubtitle:subtitle];
+            [self drawGeoFence:geoFence onMapView:self.mapView];
+        }
+        
+        
+        
+        
+        
+    }];
+    
+    [alertController addAction:cancelAction];
+    [alertController addAction:okAction];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
 @end
